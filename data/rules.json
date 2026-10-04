@@ -1,22 +1,22 @@
-{
-  "rules": [
-    {
-      "id": "rule1",
-      "name": "ルール1",
-      "description": "ぶっトビウオ基本ルール",
-      "yakumanSet": "standard"
-    },
-    {
-      "id": "rule2",
-      "name": "ルール2",
-      "description": "特殊ルール2",
-      "yakumanSet": "rule2"
-    },
-    {
-      "id": "rule3",
-      "name": "ルール3",
-      "description": "特殊ルール3",
-      "yakumanSet": "rule3"
-    }
-  ]
-}
+[
+  {
+    "id": "chinitsuGame03",
+    "name": "清一色ゲーム（三人麻雀）",
+    "rulebook": "https://entrance24.github.io/mahjong-rulebook/rulebooks/chinitsuGame03/"
+  },
+  {
+    "id": "清一色ゲーム（四人麻雀）",
+    "name": "清一色ゲーム（四人麻雀）",
+    "rulebook": "https://entrance24.github.io/mahjong-rulebook/rulebooks/chinitsuGame04/"
+  },
+  {
+    "id": "pachinko",
+    "name": "パチンコ",
+    "rulebook": "https://entrance24.github.io/mahjong-rulebook/rulebooks/pachinko/"
+  },
+  {
+    "id": "buttobiuo",
+    "name": "ぶっトビウオ",
+    "rulebook": "https://entrance24.github.io/mahjong-rulebook/rulebooks/buttobiuo/"
+  }
+]
