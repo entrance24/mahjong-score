@@ -117,10 +117,6 @@ document.addEventListener(
 
 async function loadInitialData() {
 
-  /*
-   * GitHub Pages上のscore.jsonを優先して読み込む。
-   */
-
   try {
 
     const response =
@@ -175,11 +171,6 @@ async function loadInitialData() {
   }
 
 
-  /*
-   * GitHubから取得できなかった場合は、
-   * ブラウザのローカル保存データを使用する。
-   */
-
   const localData =
     loadLocalData();
 
@@ -201,10 +192,6 @@ async function loadInitialData() {
 
   }
 
-
-  /*
-   * 何もなければ初期状態。
-   */
 
   appData =
     normalizeData({
@@ -357,10 +344,6 @@ function setupEvents() {
   );
 
 
-  /*
-   * 参加者名変更
-   */
-
   for (
     let i = 0;
     i < 4;
@@ -393,16 +376,7 @@ function setupEvents() {
           value;
 
 
-        /*
-         * 表の見出しを即時更新
-         */
-
         renderPlayerNames();
-
-
-        /*
-         * ブラウザに保存
-         */
 
         saveLocalData();
 
@@ -435,10 +409,6 @@ function renderPlayerNames() {
       appData.players[i];
 
 
-    /*
-     * 設定欄
-     */
-
     const settingInput =
       document.getElementById(
         `playerName${i + 1}`
@@ -456,19 +426,11 @@ function renderPlayerNames() {
     }
 
 
-    /*
-     * スコア表
-     */
-
     document.getElementById(
       `scoreName${i + 1}`
     ).textContent =
       playerName;
 
-
-    /*
-     * 役満表
-     */
 
     document.getElementById(
       `yakumanName${i + 1}`
@@ -587,10 +549,6 @@ function renderScoreTable() {
   appData.scores.forEach(
     (score, index) => {
 
-      /*
-       * 半荘数は自動採番
-       */
-
       score.han =
         index + 1;
 
@@ -691,6 +649,8 @@ function renderScoreTable() {
 
   updateScoreDiffs();
 
+  updateScoreRankings();
+
   renderScoreFooter();
 
 }
@@ -707,10 +667,6 @@ function renderYakumanTable() {
 
   appData.yakuman.forEach(
     (item, index) => {
-
-      /*
-       * No.は自動採番
-       */
 
       item.no =
         index + 1;
@@ -844,6 +800,8 @@ function renderYakumanTable() {
 
 
   updateYakumanDiffs();
+
+  updateYakumanRankings();
 
   renderYakumanFooter();
 
@@ -1018,6 +976,194 @@ function setDiffCell(
     );
 
   }
+
+}
+
+
+/* =========================================================
+ * スコア表のトップ・最下位
+ * ========================================================= */
+
+function updateScoreRankings() {
+
+  appData.scores.forEach(
+    (row, index) => {
+
+      const values = [
+
+        toNumber(row.name1),
+        toNumber(row.name2),
+        toNumber(row.name3),
+        toNumber(row.name4)
+
+      ];
+
+
+      applyRankingColors(
+        "score",
+        index,
+        values
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+ * 役満表のトップ・最下位
+ * ========================================================= */
+
+function updateYakumanRankings() {
+
+  appData.yakuman.forEach(
+    (row, index) => {
+
+      const values = [
+
+        toNumber(row.name1),
+        toNumber(row.name2),
+        toNumber(row.name3),
+        toNumber(row.name4)
+
+      ];
+
+
+      applyRankingColors(
+        "yakuman",
+        index,
+        values
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+ * トップ・最下位の彩色
+ * ========================================================= */
+
+function applyRankingColors(
+  type,
+  index,
+  values
+) {
+
+  /*
+   * 既存の色をいったん削除
+   */
+
+  const inputs =
+    document.querySelectorAll(
+      `input[data-type="${type}"][data-index="${index}"]`
+    );
+
+
+  inputs.forEach(
+    input => {
+
+      input.classList.remove(
+        "score-top",
+        "score-bottom"
+      );
+
+    }
+  );
+
+
+  /*
+   * まだ全員未入力の場合は、
+   * ランキング表示をしない。
+   */
+
+  const hasInput =
+    values.some(
+      value =>
+        value !== 0
+    );
+
+
+  if (!hasInput) {
+
+    return;
+
+  }
+
+
+  /*
+   * 最大値・最小値
+   */
+
+  const max =
+    Math.max(
+      ...values
+    );
+
+
+  const min =
+    Math.min(
+      ...values
+    );
+
+
+  /*
+   * 各プレイヤーに適用
+   */
+
+  inputs.forEach(
+    input => {
+
+      const field =
+        input.dataset.field;
+
+
+      const playerIndex =
+        Number(
+          field.replace(
+            "name",
+            ""
+          )
+        ) - 1;
+
+
+      const value =
+        values[playerIndex];
+
+
+      /*
+       * 同点トップ
+       */
+
+      if (
+        value === max
+      ) {
+
+        input.classList.add(
+          "score-top"
+        );
+
+      }
+
+
+      /*
+       * 同点最下位
+       */
+
+      if (
+        value === min
+      ) {
+
+        input.classList.add(
+          "score-bottom"
+        );
+
+      }
+
+    }
+  );
 
 }
 
@@ -1273,10 +1419,6 @@ document.addEventListener(
       target.value;
 
 
-    /*
-     * 数値項目
-     */
-
     if (
 
       [
@@ -1317,10 +1459,6 @@ document.addEventListener(
     }
 
 
-    /*
-     * データ更新
-     */
-
     if (
       type === "score"
     ) {
@@ -1338,15 +1476,13 @@ document.addEventListener(
     }
 
 
-    /*
-     * ブラウザへ保存
-     */
-
     saveLocalData();
 
 
     /*
-     * 差分・フッター更新
+     * 数値入力時は
+     * 差分・順位・フッターを
+     * リアルタイム更新
      */
 
     if (
@@ -1355,11 +1491,15 @@ document.addEventListener(
 
       updateScoreDiffs();
 
+      updateScoreRankings();
+
       renderScoreFooter();
 
     } else {
 
       updateYakumanDiffs();
+
+      updateYakumanRankings();
 
       renderYakumanFooter();
 
@@ -1432,10 +1572,6 @@ document.addEventListener(
       );
 
 
-      /*
-       * 半荘番号を振り直す
-       */
-
       appData.scores.forEach(
         (row, i) => {
 
@@ -1453,10 +1589,6 @@ document.addEventListener(
         1
       );
 
-
-      /*
-       * No.を振り直す
-       */
 
       appData.yakuman.forEach(
         (row, i) => {
@@ -1588,10 +1720,6 @@ function loadLocalData() {
 
 function exportJson() {
 
-  /*
-   * 最新状態をコピー
-   */
-
   const exportData =
     normalizeData(
       JSON.parse(
@@ -1602,10 +1730,6 @@ function exportJson() {
     );
 
 
-  /*
-   * 更新日時を記録
-   */
-
   exportData.updatedAt =
     new Date().toISOString();
 
@@ -1614,10 +1738,6 @@ function exportJson() {
     1;
 
 
-  /*
-   * JSON化
-   */
-
   const json =
     JSON.stringify(
       exportData,
@@ -1625,10 +1745,6 @@ function exportJson() {
       2
     );
 
-
-  /*
-   * ダウンロード
-   */
 
   const blob =
     new Blob(
@@ -1674,10 +1790,6 @@ function exportJson() {
     url
   );
 
-
-  /*
-   * ローカル側にも更新日時を保存
-   */
 
   appData.updatedAt =
     exportData.updatedAt;
