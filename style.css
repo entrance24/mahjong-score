@@ -1,0 +1,447 @@
+:root {
+  --background: #f4f6f8;
+  --card-background: #ffffff;
+
+  --border: #d8dde3;
+
+  --text: #222222;
+  --sub-text: #666666;
+
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+
+  --danger: #dc2626;
+  --danger-background: #fee2e2;
+
+  --warning: #d97706;
+  --warning-background: #fef3c7;
+
+  --positive: #dc2626;
+  --negative: #2563eb;
+
+  --footer-background: #f1f5f9;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  margin: 0;
+
+  background: var(--background);
+  color: var(--text);
+
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    "Hiragino Kaku Gothic ProN",
+    "Hiragino Sans",
+    Meiryo,
+    sans-serif;
+}
+
+
+/* ============================== */
+/* ヘッダー */
+/* ============================== */
+
+.page-header {
+  display: flex;
+
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 20px;
+
+  padding: 20px 24px;
+
+  background: #ffffff;
+
+  border-bottom: 1px solid var(--border);
+
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.page-header h1 {
+  margin: 0 0 4px;
+
+  font-size: 1.6rem;
+}
+
+#status {
+  margin: 0;
+
+  color: var(--sub-text);
+
+  font-size: 0.85rem;
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+}
+
+
+/* ============================== */
+/* メイン */
+/* ============================== */
+
+main {
+  max-width: 1400px;
+
+  margin: 0 auto;
+
+  padding: 24px;
+}
+
+
+/* ============================== */
+/* カード */
+/* ============================== */
+
+.card {
+  margin-bottom: 24px;
+
+  padding: 20px;
+
+  background: var(--card-background);
+
+  border: 1px solid var(--border);
+
+  border-radius: 10px;
+
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.section-header {
+  display: flex;
+
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 20px;
+
+  margin-bottom: 16px;
+}
+
+.section-header h2 {
+  margin: 0 0 4px;
+
+  font-size: 1.25rem;
+}
+
+.description {
+  margin: 0;
+
+  color: var(--sub-text);
+
+  font-size: 0.85rem;
+}
+
+
+/* ============================== */
+/* ボタン */
+/* ============================== */
+
+.button {
+  border: none;
+
+  border-radius: 6px;
+
+  padding: 9px 14px;
+
+  font-size: 0.9rem;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  white-space: nowrap;
+
+  transition:
+    background-color 0.15s,
+    transform 0.05s;
+}
+
+.button:active {
+  transform: translateY(1px);
+}
+
+.button.primary {
+  color: #ffffff;
+
+  background: var(--primary);
+}
+
+.button.primary:hover {
+  background: var(--primary-hover);
+}
+
+.button.secondary {
+  color: #333333;
+
+  background: #e5e7eb;
+}
+
+.button.secondary:hover {
+  background: #d1d5db;
+}
+
+.button.delete {
+  color: #ffffff;
+
+  background: var(--danger);
+
+  padding: 6px 10px;
+
+  font-size: 0.8rem;
+}
+
+.button.delete:hover {
+  background: #b91c1c;
+}
+
+
+/* ============================== */
+/* テーブル */
+/* ============================== */
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+
+  border-collapse: collapse;
+
+  min-width: 850px;
+}
+
+th,
+td {
+  border: 1px solid var(--border);
+
+  padding: 7px;
+
+  text-align: center;
+
+  vertical-align: middle;
+}
+
+th {
+  background: #eef2f7;
+
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+tfoot td {
+  background: var(--footer-background);
+
+  font-weight: 700;
+}
+
+
+/* ============================== */
+/* 入力欄 */
+/* ============================== */
+
+input[type="number"],
+input[type="text"] {
+  width: 100%;
+
+  min-width: 70px;
+
+  padding: 7px 8px;
+
+  border: 1px solid #cbd5e1;
+
+  border-radius: 5px;
+
+  background: #ffffff;
+
+  color: var(--text);
+
+  font-size: 0.95rem;
+}
+
+input[type="number"] {
+  text-align: right;
+}
+
+input[type="text"] {
+  text-align: left;
+}
+
+input:focus {
+  outline: none;
+
+  border-color: var(--primary);
+
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.12);
+}
+
+
+/* ============================== */
+/* 半荘数 / No. */
+/* ============================== */
+
+.index-cell {
+  font-weight: 700;
+
+  background: #f8fafc;
+
+  color: #475569;
+}
+
+
+/* ============================== */
+/* 差分 */
+/* ============================== */
+
+.diff-cell {
+  font-weight: 700;
+
+  min-width: 90px;
+}
+
+.diff-zero {
+  color: #64748b;
+
+  background: #f8fafc;
+}
+
+.diff-positive {
+  color: var(--positive);
+
+  background: #fee2e2;
+}
+
+.diff-negative {
+  color: var(--negative);
+
+  background: #dbeafe;
+}
+
+
+/*
+ * 「0以外の値は例外として視覚的にわかりやすく彩色」
+ *
+ * 正数 → 赤
+ * 負数 → 青
+ */
+
+.diff-cell.diff-positive,
+.diff-cell.diff-negative {
+  font-weight: 800;
+}
+
+
+/* ============================== */
+/* フッター */
+/* ============================== */
+
+.total-label {
+  text-align: right;
+
+  padding-right: 12px;
+}
+
+
+/* ============================== */
+/* 操作列 */
+/* ============================== */
+
+.operation-column {
+  width: 70px;
+}
+
+.operation-cell {
+  width: 70px;
+}
+
+
+/* ============================== */
+/* 説明 */
+/* ============================== */
+
+.help ol {
+  margin-bottom: 20px;
+}
+
+.warning {
+  margin: 0;
+
+  padding: 12px;
+
+  border-radius: 6px;
+
+  background: var(--warning-background);
+
+  color: #92400e;
+
+  font-size: 0.9rem;
+}
+
+
+/* ============================== */
+/* フッター */
+/* ============================== */
+
+.page-footer {
+  padding: 20px;
+
+  text-align: center;
+
+  color: #64748b;
+
+  font-size: 0.8rem;
+}
+
+
+/* ============================== */
+/* スマートフォン */
+/* ============================== */
+
+@media (max-width: 700px) {
+
+  .page-header {
+    flex-direction: column;
+
+    align-items: stretch;
+  }
+
+  .header-actions {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .section-header {
+    flex-direction: column;
+
+    align-items: stretch;
+  }
+
+  main {
+    padding: 12px;
+  }
+
+  .card {
+    padding: 12px;
+  }
+
+  .button {
+    padding: 10px 12px;
+  }
+}
