@@ -1,61 +1,165 @@
-<!DOCTYPE html> <html lang="ja"> <head> <meta charset="UTF-8"> <!-- スマートフォン対応 --> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>ぶっトビウオ スコア管理</title> <!-- CSS --> <link rel="stylesheet" href="css/style.css"> </head> <body> <!-- ==================== ヘッダー ==================== --> <header class="site-header"> <div class="container"> <h1>ぶっトビウオ</h1> <p>特殊麻雀スコア管理</p> </div> </header> <!-- ==================== メイン ==================== --> <main class="container">
-<!-- ページタイトル -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<section class="page-title">
-  <h2>スコア管理</h2>
-  <p>
-    半荘結果や役満を記録・確認できます。
-  </p>
-</section>
+  <title>麻雀スコア</title>
 
+  <link rel="stylesheet" href="style.css">
+</head>
 
-<!-- ==================== メニュー ==================== -->
+<body>
 
-<section class="menu">
+  <header class="page-header">
+    <div>
+      <h1>麻雀スコア</h1>
+      <p id="status">データを読み込んでいます...</p>
+    </div>
 
-  <a href="score.html" class="menu-card">
-    <h3>📊 スコア管理</h3>
-    <p>
-      半荘結果や役満を登録・確認します。
-    </p>
-  </a>
+    <div class="header-actions">
+      <button id="reloadButton" class="button secondary">
+        GitHubのデータを再読み込み
+      </button>
 
-  <a href="statistics.html" class="menu-card">
-    <h3>🏆 成績・ランキング</h3>
-    <p>
-      ルール別・メンバー別・全ルールの
-      成績を確認します。
-    </p>
-  </a>
-
-  <a href="rules.html" class="menu-card">
-    <h3>📖 ルール</h3>
-    <p>
-      採用している特殊麻雀ルールを確認します。
-    </p>
-  </a>
-
-  <a href="settings.html" class="menu-card">
-    <h3>⚙️ 設定</h3>
-    <p>
-      メンバー・ルール・役満などの
-      マスター情報を管理します。
-    </p>
-  </a>
-
-</section>
+      <button id="exportButton" class="button primary">
+        JSONを書き出す
+      </button>
+    </div>
+  </header>
 
 
-<!-- ==================== 最近の対局 ==================== -->
+  <main>
 
-<section class="recent-games">
+    <!-- ============================== -->
+    <!-- スコア表 -->
+    <!-- ============================== -->
 
-  <h2>最近の対局</h2>
+    <section class="card">
 
-  <div id="recent-games-list">
-    <p>対局データを読み込んでいます...</p>
-  </div>
+      <div class="section-header">
+        <div>
+          <h2>スコア表</h2>
+          <p class="description">
+            通常の半荘結果を入力します。
+          </p>
+        </div>
 
-</section>
+        <button id="addScoreButton" class="button primary">
+          ＋ 半荘を追加
+        </button>
+      </div>
 
-</main> <!-- ==================== フッター ==================== --> <footer class="site-footer"> <p> ぶっトビウオ スコア管理 </p> </footer> <!-- JavaScript --> <script src="js/main.js"></script> </body> </html>
+      <div class="table-wrapper">
+
+        <table id="scoreTable">
+
+          <thead>
+            <tr>
+              <th>半荘数</th>
+              <th>名前1</th>
+              <th>名前2</th>
+              <th>名前3</th>
+              <th>名前4</th>
+              <th>差分</th>
+              <th>備考</th>
+              <th class="operation-column">操作</th>
+            </tr>
+          </thead>
+
+          <tbody id="scoreTableBody"></tbody>
+
+          <tfoot id="scoreTableFooter"></tfoot>
+
+        </table>
+
+      </div>
+
+    </section>
+
+
+    <!-- ============================== -->
+    <!-- 役満表 -->
+    <!-- ============================== -->
+
+    <section class="card">
+
+      <div class="section-header">
+        <div>
+          <h2>役満表</h2>
+          <p class="description">
+            役満が出た半荘を記録します。
+          </p>
+        </div>
+
+        <button id="addYakumanButton" class="button primary">
+          ＋ 役満を追加
+        </button>
+      </div>
+
+      <div class="table-wrapper">
+
+        <table id="yakumanTable">
+
+          <thead>
+            <tr>
+              <th>No.</th>
+              <th>半荘数</th>
+              <th>名前1</th>
+              <th>名前2</th>
+              <th>名前3</th>
+              <th>名前4</th>
+              <th>差分</th>
+              <th>役満名</th>
+              <th>備考</th>
+              <th class="operation-column">操作</th>
+            </tr>
+          </thead>
+
+          <tbody id="yakumanTableBody"></tbody>
+
+          <tfoot id="yakumanTableFooter"></tfoot>
+
+        </table>
+
+      </div>
+
+    </section>
+
+
+    <!-- ============================== -->
+    <!-- 使い方 -->
+    <!-- ============================== -->
+
+    <section class="card help">
+
+      <h2>使い方</h2>
+
+      <ol>
+        <li>スコアを入力します。</li>
+        <li>入力内容はこのブラウザに自動保存されます。</li>
+        <li>麻雀終了後、「JSONを書き出す」を押します。</li>
+        <li>ダウンロードされた <code>score.json</code> をGitHubリポジトリへアップロードします。</li>
+        <li>GitHubへCommitします。</li>
+        <li>参加者がページを再読み込みすると最新データが表示されます。</li>
+      </ol>
+
+      <p class="warning">
+        ※ 「JSONを書き出す」を押しただけではGitHub上のデータは更新されません。
+        ダウンロードされたscore.jsonをGitHubへCommitしてください。
+      </p>
+
+    </section>
+
+  </main>
+
+
+  <footer class="page-footer">
+    <p>Mahjong Score</p>
+  </footer>
+
+
+  <script src="app.js"></script>
+
+</body>
+</html>
