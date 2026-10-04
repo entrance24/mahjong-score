@@ -7,7 +7,8 @@
 
 const DATA_FILE = "score.json";
 
-const LOCAL_STORAGE_KEY = "mahjong-score-data";
+const LOCAL_STORAGE_KEY =
+  "mahjong-score-data";
 
 
 /* =========================================================
@@ -15,10 +16,22 @@ const LOCAL_STORAGE_KEY = "mahjong-score-data";
  * ========================================================= */
 
 let appData = {
+
   version: 1,
+
   updatedAt: "",
+
+  players: [
+    "名前1",
+    "名前2",
+    "名前3",
+    "名前4"
+  ],
+
   scores: [],
+
   yakuman: []
+
 };
 
 
@@ -27,46 +40,75 @@ let appData = {
  * ========================================================= */
 
 const scoreTableBody =
-  document.getElementById("scoreTableBody");
+  document.getElementById(
+    "scoreTableBody"
+  );
+
 
 const scoreTableFooter =
-  document.getElementById("scoreTableFooter");
+  document.getElementById(
+    "scoreTableFooter"
+  );
+
 
 const yakumanTableBody =
-  document.getElementById("yakumanTableBody");
+  document.getElementById(
+    "yakumanTableBody"
+  );
+
 
 const yakumanTableFooter =
-  document.getElementById("yakumanTableFooter");
+  document.getElementById(
+    "yakumanTableFooter"
+  );
+
 
 const statusElement =
-  document.getElementById("status");
+  document.getElementById(
+    "status"
+  );
+
 
 const addScoreButton =
-  document.getElementById("addScoreButton");
+  document.getElementById(
+    "addScoreButton"
+  );
+
 
 const addYakumanButton =
-  document.getElementById("addYakumanButton");
+  document.getElementById(
+    "addYakumanButton"
+  );
+
 
 const exportButton =
-  document.getElementById("exportButton");
+  document.getElementById(
+    "exportButton"
+  );
+
 
 const reloadButton =
-  document.getElementById("reloadButton");
+  document.getElementById(
+    "reloadButton"
+  );
 
 
 /* =========================================================
  * 初期化
  * ========================================================= */
 
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener(
+  "DOMContentLoaded",
+  async () => {
 
-  await loadInitialData();
+    await loadInitialData();
 
-  render();
+    render();
 
-  setupEvents();
+    setupEvents();
 
-});
+  }
+);
 
 
 /* =========================================================
@@ -76,40 +118,50 @@ document.addEventListener("DOMContentLoaded", async () => {
 async function loadInitialData() {
 
   /*
-   * まずGitHub Pages上のscore.jsonを読み込む。
+   * GitHub Pages上のscore.jsonを優先して読み込む。
    */
 
   try {
 
-    const response = await fetch(
-      `${DATA_FILE}?t=${Date.now()}`,
-      {
-        cache: "no-store"
-      }
-    );
+    const response =
+      await fetch(
+        `${DATA_FILE}?t=${Date.now()}`,
+        {
+          cache: "no-store"
+        }
+      );
+
 
     if (!response.ok) {
+
       throw new Error(
         `HTTP ${response.status}`
       );
+
     }
 
-    const remoteData = await response.json();
 
-    appData = normalizeData(remoteData);
+    const remoteData =
+      await response.json();
 
-    /*
-     * GitHubのデータを読み込んだら、
-     * ブラウザ側にも保存する。
-     */
+
+    appData =
+      normalizeData(
+        remoteData
+      );
+
 
     saveLocalData();
 
+
     setStatus(
       `GitHubのデータを読み込みました。更新日時: ${
-        formatDate(appData.updatedAt)
+        formatDate(
+          appData.updatedAt
+        )
       }`
     );
+
 
     return;
 
@@ -124,21 +176,26 @@ async function loadInitialData() {
 
 
   /*
-   * GitHubから読めなかった場合は、
-   * ブラウザに保存されているデータを使用する。
+   * GitHubから取得できなかった場合は、
+   * ブラウザのローカル保存データを使用する。
    */
 
   const localData =
     loadLocalData();
 
+
   if (localData) {
 
     appData =
-      normalizeData(localData);
+      normalizeData(
+        localData
+      );
+
 
     setStatus(
       "ブラウザに保存されているデータを使用しています。"
     );
+
 
     return;
 
@@ -146,20 +203,32 @@ async function loadInitialData() {
 
 
   /*
-   * 何もなければ空データ。
+   * 何もなければ初期状態。
    */
 
   appData =
     normalizeData({
       version: 1,
+
       updatedAt: "",
+
+      players: [
+        "名前1",
+        "名前2",
+        "名前3",
+        "名前4"
+      ],
+
       scores: [],
+
       yakuman: []
     });
+
 
   setStatus(
     "新しいスコア表を開始しました。"
   );
+
 }
 
 
@@ -169,34 +238,97 @@ async function loadInitialData() {
 
 function normalizeData(data) {
 
-  if (!data || typeof data !== "object") {
+  if (
+    !data ||
+    typeof data !== "object"
+  ) {
+
     data = {};
+
   }
 
+
+  let players = [
+
+    "名前1",
+    "名前2",
+    "名前3",
+    "名前4"
+
+  ];
+
+
+  if (
+    Array.isArray(
+      data.players
+    )
+  ) {
+
+    players =
+      data.players
+        .slice(0, 4)
+        .map(
+          (name, index) => {
+
+            const text =
+              String(
+                name ?? ""
+              ).trim();
+
+
+            return text ||
+              `名前${index + 1}`;
+
+          }
+        );
+
+
+    while (
+      players.length < 4
+    ) {
+
+      players.push(
+        `名前${players.length + 1}`
+      );
+
+    }
+
+  }
+
+
   return {
+
     version:
       Number(data.version) || 1,
+
 
     updatedAt:
       typeof data.updatedAt === "string"
         ? data.updatedAt
         : "",
 
+
+    players: players,
+
+
     scores:
       Array.isArray(data.scores)
         ? data.scores
         : [],
 
+
     yakuman:
       Array.isArray(data.yakuman)
         ? data.yakuman
         : []
+
   };
+
 }
 
 
 /* =========================================================
- * イベント
+ * イベント設定
  * ========================================================= */
 
 function setupEvents() {
@@ -206,26 +338,176 @@ function setupEvents() {
     addScore
   );
 
+
   addYakumanButton.addEventListener(
     "click",
     addYakuman
   );
+
 
   exportButton.addEventListener(
     "click",
     exportJson
   );
 
+
   reloadButton.addEventListener(
     "click",
     reloadFromGitHub
   );
 
+
+  /*
+   * 参加者名変更
+   */
+
+  for (
+    let i = 0;
+    i < 4;
+    i++
+  ) {
+
+    const input =
+      document.getElementById(
+        `playerName${i + 1}`
+      );
+
+
+    input.addEventListener(
+      "input",
+      () => {
+
+        let value =
+          input.value.trim();
+
+
+        if (value === "") {
+
+          value =
+            `名前${i + 1}`;
+
+        }
+
+
+        appData.players[i] =
+          value;
+
+
+        /*
+         * 表の見出しを即時更新
+         */
+
+        renderPlayerNames();
+
+
+        /*
+         * ブラウザに保存
+         */
+
+        saveLocalData();
+
+
+        setStatus(
+          "参加者名を変更しました。JSONを書き出すとGitHubへ反映できます。"
+        );
+
+      }
+    );
+
+  }
+
 }
 
 
 /* =========================================================
- * スコア追加
+ * 参加者名表示
+ * ========================================================= */
+
+function renderPlayerNames() {
+
+  for (
+    let i = 0;
+    i < 4;
+    i++
+  ) {
+
+    const playerName =
+      appData.players[i];
+
+
+    /*
+     * 設定欄
+     */
+
+    const settingInput =
+      document.getElementById(
+        `playerName${i + 1}`
+      );
+
+
+    if (
+      document.activeElement !==
+      settingInput
+    ) {
+
+      settingInput.value =
+        playerName;
+
+    }
+
+
+    /*
+     * スコア表
+     */
+
+    document.getElementById(
+      `scoreName${i + 1}`
+    ).textContent =
+      playerName;
+
+
+    /*
+     * 役満表
+     */
+
+    document.getElementById(
+      `yakumanName${i + 1}`
+    ).textContent =
+      playerName;
+
+  }
+
+}
+
+
+/* =========================================================
+ * 参加者設定表示
+ * ========================================================= */
+
+function renderPlayerSettings() {
+
+  for (
+    let i = 0;
+    i < 4;
+    i++
+  ) {
+
+    const input =
+      document.getElementById(
+        `playerName${i + 1}`
+      );
+
+
+    input.value =
+      appData.players[i];
+
+  }
+
+}
+
+
+/* =========================================================
+ * 半荘追加
  * ========================================================= */
 
 function addScore() {
@@ -233,20 +515,28 @@ function addScore() {
   const nextHan =
     appData.scores.length + 1;
 
+
   appData.scores.push({
+
     han: nextHan,
 
     name1: null,
+
     name2: null,
+
     name3: null,
+
     name4: null,
 
     note: ""
+
   });
+
 
   saveAndRender(
     "半荘を追加しました。"
   );
+
 }
 
 
@@ -257,23 +547,31 @@ function addScore() {
 function addYakuman() {
 
   appData.yakuman.push({
-    no: appData.yakuman.length + 1,
+
+    no:
+      appData.yakuman.length + 1,
 
     han: null,
 
     name1: null,
+
     name2: null,
+
     name3: null,
+
     name4: null,
 
     yakumanName: "",
 
     note: ""
+
   });
+
 
   saveAndRender(
     "役満を追加しました。"
   );
+
 }
 
 
@@ -285,24 +583,30 @@ function renderScoreTable() {
 
   scoreTableBody.innerHTML = "";
 
+
   appData.scores.forEach(
     (score, index) => {
 
       /*
-       * 半荘数は配列順から自動採番。
+       * 半荘数は自動採番
        */
 
       score.han =
         index + 1;
 
+
       const row =
-        document.createElement("tr");
+        document.createElement(
+          "tr"
+        );
+
 
       row.innerHTML = `
 
         <td class="index-cell">
           ${score.han}
         </td>
+
 
         ${createNumberInput(
           "score",
@@ -311,12 +615,14 @@ function renderScoreTable() {
           score.name1
         )}
 
+
         ${createNumberInput(
           "score",
           index,
           "name2",
           score.name2
         )}
+
 
         ${createNumberInput(
           "score",
@@ -325,6 +631,7 @@ function renderScoreTable() {
           score.name3
         )}
 
+
         ${createNumberInput(
           "score",
           index,
@@ -332,39 +639,60 @@ function renderScoreTable() {
           score.name4
         )}
 
-        <td class="diff-cell" data-diff-type="score" data-index="${index}">
+
+        <td
+          class="diff-cell"
+          data-diff-type="score"
+          data-index="${index}"
+        >
           0
         </td>
 
+
         <td>
+
           <input
             type="text"
-            value="${escapeHtmlAttribute(score.note)}"
+            value="${escapeHtmlAttribute(
+              score.note
+            )}"
             data-type="score"
             data-index="${index}"
             data-field="note"
             placeholder="備考"
           >
+
         </td>
 
+
         <td class="operation-cell">
+
           <button
             class="button delete"
             data-delete-type="score"
             data-index="${index}"
+            type="button"
           >
             削除
           </button>
+
         </td>
+
       `;
 
-      scoreTableBody.appendChild(row);
+
+      scoreTableBody.appendChild(
+        row
+      );
+
     }
   );
+
 
   updateScoreDiffs();
 
   renderScoreFooter();
+
 }
 
 
@@ -376,18 +704,23 @@ function renderYakumanTable() {
 
   yakumanTableBody.innerHTML = "";
 
+
   appData.yakuman.forEach(
     (item, index) => {
 
       /*
-       * No.は自動採番。
+       * No.は自動採番
        */
 
       item.no =
         index + 1;
 
+
       const row =
-        document.createElement("tr");
+        document.createElement(
+          "tr"
+        );
+
 
       row.innerHTML = `
 
@@ -395,17 +728,23 @@ function renderYakumanTable() {
           ${item.no}
         </td>
 
+
         <td>
+
           <input
             type="number"
             step="1"
-            value="${inputValue(item.han)}"
+            value="${inputValue(
+              item.han
+            )}"
             data-type="yakuman"
             data-index="${index}"
             data-field="han"
             placeholder="半荘数"
           >
+
         </td>
+
 
         ${createNumberInput(
           "yakuman",
@@ -414,12 +753,14 @@ function renderYakumanTable() {
           item.name1
         )}
 
+
         ${createNumberInput(
           "yakuman",
           index,
           "name2",
           item.name2
         )}
+
 
         ${createNumberInput(
           "yakuman",
@@ -428,12 +769,14 @@ function renderYakumanTable() {
           item.name3
         )}
 
+
         ${createNumberInput(
           "yakuman",
           index,
           "name4",
           item.name4
         )}
+
 
         <td
           class="diff-cell"
@@ -443,46 +786,67 @@ function renderYakumanTable() {
           0
         </td>
 
+
         <td>
+
           <input
             type="text"
-            value="${escapeHtmlAttribute(item.yakumanName)}"
+            value="${escapeHtmlAttribute(
+              item.yakumanName
+            )}"
             data-type="yakuman"
             data-index="${index}"
             data-field="yakumanName"
             placeholder="役満名"
           >
+
         </td>
 
+
         <td>
+
           <input
             type="text"
-            value="${escapeHtmlAttribute(item.note)}"
+            value="${escapeHtmlAttribute(
+              item.note
+            )}"
             data-type="yakuman"
             data-index="${index}"
             data-field="note"
             placeholder="備考"
           >
+
         </td>
 
+
         <td class="operation-cell">
+
           <button
             class="button delete"
             data-delete-type="yakuman"
             data-index="${index}"
+            type="button"
           >
             削除
           </button>
+
         </td>
+
       `;
 
-      yakumanTableBody.appendChild(row);
+
+      yakumanTableBody.appendChild(
+        row
+      );
+
     }
   );
+
 
   updateYakumanDiffs();
 
   renderYakumanFooter();
+
 }
 
 
@@ -498,7 +862,9 @@ function createNumberInput(
 ) {
 
   return `
+
     <td>
+
       <input
         type="number"
         step="1"
@@ -508,28 +874,37 @@ function createNumberInput(
         data-field="${field}"
         placeholder="0"
       >
+
     </td>
+
   `;
+
 }
 
 
 /* =========================================================
- * スコア差分
+ * 差分計算
  * ========================================================= */
 
 function calculateDiff(row) {
 
   return (
+
     toNumber(row.name1) +
+
     toNumber(row.name2) +
+
     toNumber(row.name3) +
+
     toNumber(row.name4)
+
   );
+
 }
 
 
 /* =========================================================
- * スコア差分表示
+ * スコア差分更新
  * ========================================================= */
 
 function updateScoreDiffs() {
@@ -538,27 +913,34 @@ function updateScoreDiffs() {
     .querySelectorAll(
       '[data-diff-type="score"]'
     )
-    .forEach(cell => {
+    .forEach(
+      cell => {
 
-      const index =
-        Number(cell.dataset.index);
+        const index =
+          Number(
+            cell.dataset.index
+          );
 
-      const diff =
-        calculateDiff(
-          appData.scores[index]
+
+        const diff =
+          calculateDiff(
+            appData.scores[index]
+          );
+
+
+        setDiffCell(
+          cell,
+          diff
         );
 
-      setDiffCell(
-        cell,
-        diff
-      );
+      }
+    );
 
-    });
 }
 
 
 /* =========================================================
- * 役満差分表示
+ * 役満差分更新
  * ========================================================= */
 
 function updateYakumanDiffs() {
@@ -567,27 +949,34 @@ function updateYakumanDiffs() {
     .querySelectorAll(
       '[data-diff-type="yakuman"]'
     )
-    .forEach(cell => {
+    .forEach(
+      cell => {
 
-      const index =
-        Number(cell.dataset.index);
+        const index =
+          Number(
+            cell.dataset.index
+          );
 
-      const diff =
-        calculateDiff(
-          appData.yakuman[index]
+
+        const diff =
+          calculateDiff(
+            appData.yakuman[index]
+          );
+
+
+        setDiffCell(
+          cell,
+          diff
         );
 
-      setDiffCell(
-        cell,
-        diff
-      );
+      }
+    );
 
-    });
 }
 
 
 /* =========================================================
- * 差分セル
+ * 差分セル表示
  * ========================================================= */
 
 function setDiffCell(
@@ -598,11 +987,17 @@ function setDiffCell(
   cell.textContent =
     formatNumber(diff);
 
+
   cell.classList.remove(
+
     "diff-zero",
+
     "diff-positive",
+
     "diff-negative"
+
   );
+
 
   if (diff === 0) {
 
@@ -621,7 +1016,9 @@ function setDiffCell(
     cell.classList.add(
       "diff-negative"
     );
+
   }
+
 }
 
 
@@ -636,12 +1033,14 @@ function renderScoreFooter() {
       appData.scores
     );
 
+
   const diffTotal =
     appData.scores.reduce(
       (sum, row) =>
         sum + calculateDiff(row),
       0
     );
+
 
   scoreTableFooter.innerHTML = `
 
@@ -651,34 +1050,54 @@ function renderScoreFooter() {
         合計
       </td>
 
-      <td>
-        ${formatNumber(totals.name1)}
-      </td>
 
       <td>
-        ${formatNumber(totals.name2)}
+        ${formatNumber(
+          totals.name1
+        )}
       </td>
 
-      <td>
-        ${formatNumber(totals.name3)}
-      </td>
 
       <td>
-        ${formatNumber(totals.name4)}
+        ${formatNumber(
+          totals.name2
+        )}
       </td>
+
+
+      <td>
+        ${formatNumber(
+          totals.name3
+        )}
+      </td>
+
+
+      <td>
+        ${formatNumber(
+          totals.name4
+        )}
+      </td>
+
 
       <td
-        class="diff-cell ${diffClass(diffTotal)}"
+        class="diff-cell ${diffClass(
+          diffTotal
+        )}"
       >
-        ${formatNumber(diffTotal)}
+        ${formatNumber(
+          diffTotal
+        )}
       </td>
+
 
       <td></td>
 
       <td></td>
 
     </tr>
+
   `;
+
 }
 
 
@@ -693,12 +1112,14 @@ function renderYakumanFooter() {
       appData.yakuman
     );
 
+
   const diffTotal =
     appData.yakuman.reduce(
       (sum, row) =>
         sum + calculateDiff(row),
       0
     );
+
 
   yakumanTableFooter.innerHTML = `
 
@@ -708,27 +1129,45 @@ function renderYakumanFooter() {
 
       <td></td>
 
-      <td>
-        ${formatNumber(totals.name1)}
-      </td>
 
       <td>
-        ${formatNumber(totals.name2)}
+        ${formatNumber(
+          totals.name1
+        )}
       </td>
 
-      <td>
-        ${formatNumber(totals.name3)}
-      </td>
 
       <td>
-        ${formatNumber(totals.name4)}
+        ${formatNumber(
+          totals.name2
+        )}
       </td>
+
+
+      <td>
+        ${formatNumber(
+          totals.name3
+        )}
+      </td>
+
+
+      <td>
+        ${formatNumber(
+          totals.name4
+        )}
+      </td>
+
 
       <td
-        class="diff-cell ${diffClass(diffTotal)}"
+        class="diff-cell ${diffClass(
+          diffTotal
+        )}"
       >
-        ${formatNumber(diffTotal)}
+        ${formatNumber(
+          diffTotal
+        )}
       </td>
+
 
       <td></td>
 
@@ -737,41 +1176,61 @@ function renderYakumanFooter() {
       <td></td>
 
     </tr>
+
   `;
+
 }
 
 
 /* =========================================================
- * 縦方向の合計
+ * 名前ごとの縦方向合計
  * ========================================================= */
 
 function calculateTotals(rows) {
 
   return {
-    name1: rows.reduce(
-      (sum, row) =>
-        sum + toNumber(row.name1),
-      0
-    ),
 
-    name2: rows.reduce(
-      (sum, row) =>
-        sum + toNumber(row.name2),
-      0
-    ),
+    name1:
+      rows.reduce(
+        (sum, row) =>
+          sum + toNumber(
+            row.name1
+          ),
+        0
+      ),
 
-    name3: rows.reduce(
-      (sum, row) =>
-        sum + toNumber(row.name3),
-      0
-    ),
 
-    name4: rows.reduce(
-      (sum, row) =>
-        sum + toNumber(row.name4),
-      0
-    )
+    name2:
+      rows.reduce(
+        (sum, row) =>
+          sum + toNumber(
+            row.name2
+          ),
+        0
+      ),
+
+
+    name3:
+      rows.reduce(
+        (sum, row) =>
+          sum + toNumber(
+            row.name3
+          ),
+        0
+      ),
+
+
+    name4:
+      rows.reduce(
+        (sum, row) =>
+          sum + toNumber(
+            row.name4
+          ),
+        0
+      )
+
   };
+
 }
 
 
@@ -786,27 +1245,40 @@ document.addEventListener(
     const target =
       event.target;
 
-    if (!target.dataset.type) {
+
+    if (
+      !target.dataset.type
+    ) {
+
       return;
+
     }
+
 
     const type =
       target.dataset.type;
 
+
     const index =
-      Number(target.dataset.index);
+      Number(
+        target.dataset.index
+      );
+
 
     const field =
       target.dataset.field;
 
+
     let value =
       target.value;
+
 
     /*
      * 数値項目
      */
 
     if (
+
       [
         "han",
         "name1",
@@ -814,9 +1286,12 @@ document.addEventListener(
         "name3",
         "name4"
       ].includes(field)
+
     ) {
 
-      if (value === "") {
+      if (
+        value === ""
+      ) {
 
         value = null;
 
@@ -828,51 +1303,73 @@ document.addEventListener(
             10
           );
 
-        if (Number.isNaN(value)) {
+
+        if (
+          Number.isNaN(value)
+        ) {
+
           value = null;
+
         }
+
       }
+
     }
+
 
     /*
      * データ更新
      */
 
-    if (type === "score") {
+    if (
+      type === "score"
+    ) {
 
       appData.scores[index][field] =
         value;
 
-    } else if (type === "yakuman") {
+    } else if (
+      type === "yakuman"
+    ) {
 
       appData.yakuman[index][field] =
         value;
+
     }
 
+
     /*
-     * 入力のたびにブラウザへ保存
+     * ブラウザへ保存
      */
 
     saveLocalData();
 
+
     /*
-     * 差分とフッターを更新
+     * 差分・フッター更新
      */
 
-    if (type === "score") {
+    if (
+      type === "score"
+    ) {
 
       updateScoreDiffs();
+
       renderScoreFooter();
 
     } else {
 
       updateYakumanDiffs();
+
       renderYakumanFooter();
+
     }
+
 
     setStatus(
       "編集中。入力内容はこのブラウザに保存されています。"
     );
+
   }
 );
 
@@ -890,41 +1387,64 @@ document.addEventListener(
         "[data-delete-type]"
       );
 
+
     if (!button) {
+
       return;
+
     }
+
 
     const type =
       button.dataset.deleteType;
 
+
     const index =
-      Number(button.dataset.index);
+      Number(
+        button.dataset.index
+      );
+
 
     const message =
       type === "score"
+
         ? "この半荘を削除しますか？"
+
         : "この役満記録を削除しますか？";
 
-    if (!confirm(message)) {
+
+    if (
+      !confirm(message)
+    ) {
+
       return;
+
     }
 
-    if (type === "score") {
+
+    if (
+      type === "score"
+    ) {
 
       appData.scores.splice(
         index,
         1
       );
 
+
       /*
-       * 削除後に半荘数を振り直す。
+       * 半荘番号を振り直す
        */
 
       appData.scores.forEach(
         (row, i) => {
-          row.han = i + 1;
+
+          row.han =
+            i + 1;
+
         }
       );
+
 
     } else {
 
@@ -933,20 +1453,27 @@ document.addEventListener(
         1
       );
 
+
       /*
-       * No.を振り直す。
+       * No.を振り直す
        */
 
       appData.yakuman.forEach(
         (row, i) => {
-          row.no = i + 1;
+
+          row.no =
+            i + 1;
+
         }
       );
+
     }
+
 
     saveAndRender(
       "削除しました。"
     );
+
   }
 );
 
@@ -956,6 +1483,10 @@ document.addEventListener(
  * ========================================================= */
 
 function render() {
+
+  renderPlayerNames();
+
+  renderPlayerSettings();
 
   renderScoreTable();
 
@@ -976,14 +1507,16 @@ function saveAndRender(
 
   render();
 
+
   setStatus(
     `${message} GitHubへ保存する場合はJSONを書き出してください。`
   );
+
 }
 
 
 /* =========================================================
- * localStorage
+ * localStorage保存
  * ========================================================= */
 
 function saveLocalData() {
@@ -992,7 +1525,9 @@ function saveLocalData() {
 
     localStorage.setItem(
       LOCAL_STORAGE_KEY,
-      JSON.stringify(appData)
+      JSON.stringify(
+        appData
+      )
     );
 
   } catch (error) {
@@ -1001,9 +1536,15 @@ function saveLocalData() {
       "localStorageへの保存に失敗しました。",
       error
     );
+
   }
+
 }
 
+
+/* =========================================================
+ * localStorage読み込み
+ * ========================================================= */
 
 function loadLocalData() {
 
@@ -1014,11 +1555,17 @@ function loadLocalData() {
         LOCAL_STORAGE_KEY
       );
 
+
     if (!text) {
+
       return null;
+
     }
 
-    return JSON.parse(text);
+
+    return JSON.parse(
+      text
+    );
 
   } catch (error) {
 
@@ -1027,8 +1574,11 @@ function loadLocalData() {
       error
     );
 
+
     return null;
+
   }
+
 }
 
 
@@ -1039,23 +1589,33 @@ function loadLocalData() {
 function exportJson() {
 
   /*
-   * 書き出し前に最新データを整形。
+   * 最新状態をコピー
    */
 
   const exportData =
     normalizeData(
       JSON.parse(
-        JSON.stringify(appData)
+        JSON.stringify(
+          appData
+        )
       )
     );
+
+
+  /*
+   * 更新日時を記録
+   */
 
   exportData.updatedAt =
     new Date().toISOString();
 
-  exportData.version = 1;
+
+  exportData.version =
+    1;
+
 
   /*
-   * JSON文字列化
+   * JSON化
    */
 
   const json =
@@ -1078,29 +1638,58 @@ function exportJson() {
       }
     );
 
+
   const url =
-    URL.createObjectURL(blob);
+    URL.createObjectURL(
+      blob
+    );
+
 
   const link =
-    document.createElement("a");
+    document.createElement(
+      "a"
+    );
 
-  link.href = url;
+
+  link.href =
+    url;
+
 
   link.download =
     DATA_FILE;
 
-  document.body.appendChild(link);
+
+  document.body.appendChild(
+    link
+  );
+
 
   link.click();
 
+
   link.remove();
 
-  URL.revokeObjectURL(url);
+
+  URL.revokeObjectURL(
+    url
+  );
+
+
+  /*
+   * ローカル側にも更新日時を保存
+   */
+
+  appData.updatedAt =
+    exportData.updatedAt;
+
+
+  saveLocalData();
 
 
   setStatus(
     "score.jsonを書き出しました。GitHubへCommitしてください。"
   );
+
 }
 
 
@@ -1111,19 +1700,24 @@ function exportJson() {
 async function reloadFromGitHub() {
 
   if (
+
     !confirm(
-      "GitHub上のscore.jsonを読み込みます。\n" +
+      "GitHub上のscore.jsonを読み込みます。\n\n" +
       "現在ブラウザで編集中の未書き出しデータは上書きされます。\n\n" +
       "続行しますか？"
     )
+
   ) {
 
     return;
+
   }
+
 
   setStatus(
     "GitHubからデータを読み込んでいます..."
   );
+
 
   try {
 
@@ -1135,41 +1729,59 @@ async function reloadFromGitHub() {
         }
       );
 
+
     if (!response.ok) {
 
       throw new Error(
         `HTTP ${response.status}`
       );
+
     }
+
 
     const data =
       await response.json();
 
+
     appData =
-      normalizeData(data);
+      normalizeData(
+        data
+      );
+
 
     saveLocalData();
 
+
     render();
+
 
     setStatus(
       `GitHubのデータを再読み込みしました。更新日時: ${
-        formatDate(appData.updatedAt)
+        formatDate(
+          appData.updatedAt
+        )
       }`
     );
 
+
   } catch (error) {
 
-    console.error(error);
+    console.error(
+      error
+    );
+
 
     setStatus(
       "GitHubからの読み込みに失敗しました。"
     );
 
+
     alert(
       "score.jsonを読み込めませんでした。"
     );
+
   }
+
 }
 
 
@@ -1180,20 +1792,26 @@ async function reloadFromGitHub() {
 function toNumber(value) {
 
   if (
+
     value === null ||
     value === undefined ||
     value === ""
+
   ) {
 
     return 0;
+
   }
+
 
   const number =
     Number(value);
 
+
   return Number.isFinite(number)
     ? number
     : 0;
+
 }
 
 
@@ -1204,16 +1822,21 @@ function toNumber(value) {
 function inputValue(value) {
 
   if (
+
     value === null ||
     value === undefined
+
   ) {
 
     return "";
+
   }
+
 
   return escapeHtmlAttribute(
     String(value)
   );
+
 }
 
 
@@ -1223,9 +1846,12 @@ function inputValue(value) {
 
 function formatNumber(value) {
 
-  return Number(value).toLocaleString(
+  return Number(
+    value
+  ).toLocaleString(
     "ja-JP"
   );
+
 }
 
 
@@ -1235,30 +1861,45 @@ function formatNumber(value) {
 
 function diffClass(value) {
 
-  if (value === 0) {
+  if (
+    value === 0
+  ) {
+
     return "diff-zero";
+
   }
 
-  if (value > 0) {
+
+  if (
+    value > 0
+  ) {
+
     return "diff-positive";
+
   }
+
 
   return "diff-negative";
+
 }
 
 
 /* =========================================================
- * 日時
+ * 日時表示
  * ========================================================= */
 
 function formatDate(value) {
 
   if (!value) {
+
     return "未設定";
+
   }
+
 
   const date =
     new Date(value);
+
 
   if (
     Number.isNaN(
@@ -1267,26 +1908,52 @@ function formatDate(value) {
   ) {
 
     return value;
+
   }
+
 
   return date.toLocaleString(
     "ja-JP"
   );
+
 }
 
 
 /* =========================================================
- * HTML属性用エスケープ
+ * HTML属性エスケープ
  * ========================================================= */
 
-function escapeHtmlAttribute(value) {
+function escapeHtmlAttribute(
+  value
+) {
 
   return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll("'", "&#039;");
+
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
+
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+
+    .replaceAll(
+      "'",
+      "&#039;"
+    );
+
 }
 
 
@@ -1294,8 +1961,11 @@ function escapeHtmlAttribute(value) {
  * ステータス表示
  * ========================================================= */
 
-function setStatus(message) {
+function setStatus(
+  message
+) {
 
   statusElement.textContent =
     message;
+
 }
