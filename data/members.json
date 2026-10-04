@@ -1,1 +1,24 @@
-
+{
+  "members": [
+    {
+      "id": "tanaka",
+      "name": "田中",
+      "active": true
+    },
+    {
+      "id": "sato",
+      "name": "佐藤",
+      "active": true
+    },
+    {
+      "id": "suzuki",
+      "name": "鈴木",
+      "active": true
+    },
+    {
+      "id": "yamada",
+      "name": "山田",
+      "active": true
+    }
+  ]
+}
