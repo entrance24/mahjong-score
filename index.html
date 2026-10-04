@@ -2,6 +2,7 @@
 <html lang="ja">
 
 <head>
+
   <meta charset="UTF-8">
 
   <meta
@@ -20,14 +21,11 @@
     rel="stylesheet"
     href="style.css"
   >
+
 </head>
 
 
 <body>
-
-  <!-- =====================================================
-       通常画面
-       ===================================================== -->
 
   <div id="app">
 
@@ -48,6 +46,30 @@
 
       <div class="header-actions">
 
+        <!-- JSON読込 -->
+
+        <button
+          id="importButton"
+          class="button secondary"
+          type="button"
+        >
+          JSON読込
+        </button>
+
+
+        <!-- JSONファイル選択用。
+             通常は非表示 -->
+
+        <input
+          id="jsonFileInput"
+          type="file"
+          accept=".json,application/json"
+          hidden
+        >
+
+
+        <!-- JSON出力 -->
+
         <button
           id="exportButton"
           class="button primary"
@@ -57,6 +79,8 @@
         </button>
 
 
+        <!-- PDF -->
+
         <button
           id="pdfButton"
           class="button pdf"
@@ -65,6 +89,8 @@
           PDF出力
         </button>
 
+
+        <!-- GitHub -->
 
         <button
           id="reloadButton"
@@ -81,9 +107,9 @@
 
     <main>
 
-      <!-- ===================================================
+      <!-- =================================================
            参加者設定
-           =================================================== -->
+           ================================================= -->
 
       <section class="card">
 
@@ -107,46 +133,58 @@
         <div class="player-settings">
 
           <label>
+
             名前1
+
             <input
               id="playerName1"
               type="text"
               maxlength="30"
               value="名前1"
             >
+
           </label>
 
 
           <label>
+
             名前2
+
             <input
               id="playerName2"
               type="text"
               maxlength="30"
               value="名前2"
             >
+
           </label>
 
 
           <label>
+
             名前3
+
             <input
               id="playerName3"
               type="text"
               maxlength="30"
               value="名前3"
             >
+
           </label>
 
 
           <label>
+
             名前4
+
             <input
               id="playerName4"
               type="text"
               maxlength="30"
               value="名前4"
             >
+
           </label>
 
         </div>
@@ -154,9 +192,9 @@
       </section>
 
 
-      <!-- ===================================================
+      <!-- =================================================
            スコア表
-           =================================================== -->
+           ================================================= -->
 
       <section class="card">
 
@@ -246,9 +284,9 @@
       </section>
 
 
-      <!-- ===================================================
+      <!-- =================================================
            役満表
-           =================================================== -->
+           ================================================= -->
 
       <section class="card">
 
@@ -345,9 +383,9 @@
       </section>
 
 
-      <!-- ===================================================
-           操作説明
-           =================================================== -->
+      <!-- =================================================
+           データについて
+           ================================================= -->
 
       <section class="card help">
 
@@ -367,28 +405,39 @@
           </li>
 
           <li>
-            JSON出力を押すと、現在のデータを
+            「JSON出力」で、現在のデータを
             <code>score.json</code>
-            としてダウンロードできます。
+            として携帯などに保存できます。
           </li>
 
           <li>
-            ダウンロードした
+            「JSON読込」で、携帯などに保存してある
             <code>score.json</code>
-            をGitHubへCommitすると、他の端末にも共有されます。
+            を読み込めます。
           </li>
 
           <li>
-            PDF出力では、印刷用の成績表レイアウトが表示されます。
-            ブラウザの印刷画面で「PDFとして保存」を選択してください。
+            JSON読込はGitHubには何も反映せず、この端末のlocalStorageと画面だけを更新します。
+          </li>
+
+          <li>
+            「GitHubから再読み込み」を押すと、GitHub上の
+            <code>score.json</code>
+            を読み込みます。
+          </li>
+
+          <li>
+            「PDF出力」では印刷用の成績表を表示し、ブラウザの印刷画面からPDFとして保存できます。
           </li>
 
         </ol>
 
 
         <p class="warning">
-          「GitHubから再読み込み」を実行すると、この端末で未共有の編集内容は破棄され、
-          GitHub上のscore.jsonが読み込まれます。
+
+          「GitHubから再読み込み」を実行すると、
+          この端末で未共有のローカル編集内容はGitHub版で上書きされます。
+
         </p>
 
       </section>
@@ -421,8 +470,10 @@
       </h1>
 
       <p>
+
         出力日時：
         <span id="printDate"></span>
+
       </p>
 
     </div>
@@ -433,6 +484,7 @@
       <h2>
         参加者
       </h2>
+
 
       <div
         id="printPlayers"
