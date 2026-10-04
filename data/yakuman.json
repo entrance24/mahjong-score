@@ -1,1 +1,42 @@
+{
+  "sets": {
+    "standard": [
+      {
+        "id": "tenho",
+        "name": "天和",
+        "value": 100
+      },
+      {
+        "id": "chiho",
+        "name": "地和",
+        "value": 100
+      },
+      {
+        "id": "daisangen",
+        "name": "大三元",
+        "value": 100
+      }
+    ],
 
+    "rule2": [
+      {
+        "id": "tenho",
+        "name": "天和",
+        "value": 200
+      },
+      {
+        "id": "daisangen",
+        "name": "大三元",
+        "value": 300
+      }
+    ],
+
+    "rule3": [
+      {
+        "id": "daisushi",
+        "name": "大四喜",
+        "value": 500
+      }
+    ]
+  }
+}
