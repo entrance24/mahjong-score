@@ -1,46 +1,61 @@
-{
-  "date": "2026-10-04",
-  "games": [
-    {
-      "gameNo": 1,
-      "ruleId": "rule1",
+<!DOCTYPE html> <html lang="ja"> <head> <meta charset="UTF-8"> <!-- スマートフォン対応 --> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>ぶっトビウオ スコア管理</title> <!-- CSS --> <link rel="stylesheet" href="css/style.css"> </head> <body> <!-- ==================== ヘッダー ==================== --> <header class="site-header"> <div class="container"> <h1>ぶっトビウオ</h1> <p>特殊麻雀スコア管理</p> </div> </header> <!-- ==================== メイン ==================== --> <main class="container">
+<!-- ページタイトル -->
 
-      "players": [
-        "tanaka",
-        "sato",
-        "suzuki",
-        "yamada"
-      ],
+<section class="page-title">
+  <h2>スコア管理</h2>
+  <p>
+    半荘結果や役満を記録・確認できます。
+  </p>
+</section>
 
-      "scores": {
-        "tanaka": 250,
-        "sato": -100,
-        "suzuki": -50,
-        "yamada": -100
-      },
 
-      "note": ""
-    },
+<!-- ==================== メニュー ==================== -->
 
-    {
-      "gameNo": 2,
-      "ruleId": "rule1",
+<section class="menu">
 
-      "players": [
-        "tanaka",
-        "sato",
-        "suzuki",
-        "yamada"
-      ],
+  <a href="score.html" class="menu-card">
+    <h3>📊 スコア管理</h3>
+    <p>
+      半荘結果や役満を登録・確認します。
+    </p>
+  </a>
 
-      "scores": {
-        "tanaka": -50,
-        "sato": 300,
-        "suzuki": -150,
-        "yamada": -100
-      },
+  <a href="statistics.html" class="menu-card">
+    <h3>🏆 成績・ランキング</h3>
+    <p>
+      ルール別・メンバー別・全ルールの
+      成績を確認します。
+    </p>
+  </a>
 
-      "note": ""
-    }
-  ]
-}
+  <a href="rules.html" class="menu-card">
+    <h3>📖 ルール</h3>
+    <p>
+      採用している特殊麻雀ルールを確認します。
+    </p>
+  </a>
+
+  <a href="settings.html" class="menu-card">
+    <h3>⚙️ 設定</h3>
+    <p>
+      メンバー・ルール・役満などの
+      マスター情報を管理します。
+    </p>
+  </a>
+
+</section>
+
+
+<!-- ==================== 最近の対局 ==================== -->
+
+<section class="recent-games">
+
+  <h2>最近の対局</h2>
+
+  <div id="recent-games-list">
+    <p>対局データを読み込んでいます...</p>
+  </div>
+
+</section>
+
+</main> <!-- ==================== フッター ==================== --> <footer class="site-footer"> <p> ぶっトビウオ スコア管理 </p> </footer> <!-- JavaScript --> <script src="js/main.js"></script> </body> </html>
