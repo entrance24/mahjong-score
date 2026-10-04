@@ -8,7 +8,7 @@
 const DATA_FILE = "score.json";
 
 const LOCAL_STORAGE_KEY =
-  "mahjong-score-data";
+  "mahjong-score-data-v2";
 
 
 /* =========================================================
@@ -87,6 +87,12 @@ const exportButton =
   );
 
 
+const pdfButton =
+  document.getElementById(
+    "pdfButton"
+  );
+
+
 const reloadButton =
   document.getElementById(
     "reloadButton"
@@ -113,9 +119,37 @@ document.addEventListener(
 
 /* =========================================================
  * 初期データ読み込み
+ *
+ * localStorageに保存されたデータがある場合、
+ * それを優先する。
+ *
+ * これにより、携帯で入力途中のデータを
+ * ブラウザ再起動後にも復元できる。
  * ========================================================= */
 
 async function loadInitialData() {
+
+  const localData =
+    loadLocalData();
+
+
+  if (localData) {
+
+    appData =
+      normalizeData(
+        localData
+      );
+
+
+    setStatus(
+      "この端末に保存されていたデータを復元しました。"
+    );
+
+
+    return;
+
+  }
+
 
   try {
 
@@ -151,70 +185,30 @@ async function loadInitialData() {
 
 
     setStatus(
-      `GitHubのデータを読み込みました。更新日時: ${
-        formatDate(
-          appData.updatedAt
-        )
-      }`
+      "GitHubのscore.jsonを読み込みました。"
     );
 
-
-    return;
 
   } catch (error) {
 
     console.error(
-      "GitHubのscore.jsonを読み込めませんでした。",
+      "score.jsonの読み込みに失敗しました。",
       error
     );
 
-  }
-
-
-  const localData =
-    loadLocalData();
-
-
-  if (localData) {
 
     appData =
-      normalizeData(
-        localData
-      );
+      normalizeData({});
+
+
+    saveLocalData();
 
 
     setStatus(
-      "ブラウザに保存されているデータを使用しています。"
+      "新しいスコア表を開始しました。"
     );
 
-
-    return;
-
   }
-
-
-  appData =
-    normalizeData({
-      version: 1,
-
-      updatedAt: "",
-
-      players: [
-        "名前1",
-        "名前2",
-        "名前3",
-        "名前4"
-      ],
-
-      scores: [],
-
-      yakuman: []
-    });
-
-
-  setStatus(
-    "新しいスコア表を開始しました。"
-  );
 
 }
 
@@ -295,19 +289,119 @@ function normalizeData(data) {
         : "",
 
 
-    players: players,
+    players,
 
 
     scores:
       Array.isArray(data.scores)
-        ? data.scores
+        ? data.scores.map(
+            normalizeScore
+          )
         : [],
 
 
     yakuman:
       Array.isArray(data.yakuman)
-        ? data.yakuman
+        ? data.yakuman.map(
+            normalizeYakuman
+          )
         : []
+
+  };
+
+}
+
+
+/* =========================================================
+ * スコアデータ正規化
+ * ========================================================= */
+
+function normalizeScore(
+  row
+) {
+
+  return {
+
+    han:
+      Number(row?.han) || 0,
+
+    name1:
+      nullableNumber(
+        row?.name1
+      ),
+
+    name2:
+      nullableNumber(
+        row?.name2
+      ),
+
+    name3:
+      nullableNumber(
+        row?.name3
+      ),
+
+    name4:
+      nullableNumber(
+        row?.name4
+      ),
+
+    note:
+      String(
+        row?.note ?? ""
+      )
+
+  };
+
+}
+
+
+/* =========================================================
+ * 役満データ正規化
+ * ========================================================= */
+
+function normalizeYakuman(
+  row
+) {
+
+  return {
+
+    no:
+      Number(row?.no) || 0,
+
+    han:
+      nullableNumber(
+        row?.han
+      ),
+
+    name1:
+      nullableNumber(
+        row?.name1
+      ),
+
+    name2:
+      nullableNumber(
+        row?.name2
+      ),
+
+    name3:
+      nullableNumber(
+        row?.name3
+      ),
+
+    name4:
+      nullableNumber(
+        row?.name4
+      ),
+
+    yakumanName:
+      String(
+        row?.yakumanName ?? ""
+      ),
+
+    note:
+      String(
+        row?.note ?? ""
+      )
 
   };
 
@@ -338,6 +432,12 @@ function setupEvents() {
   );
 
 
+  pdfButton.addEventListener(
+    "click",
+    exportPdf
+  );
+
+
   reloadButton.addEventListener(
     "click",
     reloadFromGitHub
@@ -364,7 +464,9 @@ function setupEvents() {
           input.value.trim();
 
 
-        if (value === "") {
+        if (
+          value === ""
+        ) {
 
           value =
             `名前${i + 1}`;
@@ -382,7 +484,7 @@ function setupEvents() {
 
 
         setStatus(
-          "参加者名を変更しました。JSONを書き出すとGitHubへ反映できます。"
+          "参加者名を端末に保存しました。"
         );
 
       }
@@ -495,7 +597,12 @@ function addScore() {
   });
 
 
-  saveAndRender(
+  saveLocalData();
+
+  render();
+
+
+  setStatus(
     "半荘を追加しました。"
   );
 
@@ -530,7 +637,12 @@ function addYakuman() {
   });
 
 
-  saveAndRender(
+  saveLocalData();
+
+  render();
+
+
+  setStatus(
     "役満を追加しました。"
   );
 
@@ -809,7 +921,7 @@ function renderYakumanTable() {
 
 
 /* =========================================================
- * 数値入力HTML生成
+ * 数値入力HTML
  * ========================================================= */
 
 function createNumberInput(
@@ -862,7 +974,7 @@ function calculateDiff(row) {
 
 
 /* =========================================================
- * スコア差分更新
+ * スコア差分
  * ========================================================= */
 
 function updateScoreDiffs() {
@@ -898,7 +1010,7 @@ function updateScoreDiffs() {
 
 
 /* =========================================================
- * 役満差分更新
+ * 役満差分
  * ========================================================= */
 
 function updateYakumanDiffs() {
@@ -934,7 +1046,7 @@ function updateYakumanDiffs() {
 
 
 /* =========================================================
- * 差分セル表示
+ * 差分表示
  * ========================================================= */
 
 function setDiffCell(
@@ -957,13 +1069,17 @@ function setDiffCell(
   );
 
 
-  if (diff === 0) {
+  if (
+    diff === 0
+  ) {
 
     cell.classList.add(
       "diff-zero"
     );
 
-  } else if (diff > 0) {
+  } else if (
+    diff > 0
+  ) {
 
     cell.classList.add(
       "diff-positive"
@@ -981,7 +1097,7 @@ function setDiffCell(
 
 
 /* =========================================================
- * スコア表のトップ・最下位
+ * ランキング
  * ========================================================= */
 
 function updateScoreRankings() {
@@ -989,20 +1105,27 @@ function updateScoreRankings() {
   appData.scores.forEach(
     (row, index) => {
 
-      const values = [
-
-        toNumber(row.name1),
-        toNumber(row.name2),
-        toNumber(row.name3),
-        toNumber(row.name4)
-
-      ];
-
-
       applyRankingColors(
         "score",
         index,
-        values
+        getPlayerValues(row)
+      );
+
+    }
+  );
+
+}
+
+
+function updateYakumanRankings() {
+
+  appData.yakuman.forEach(
+    (row, index) => {
+
+      applyRankingColors(
+        "yakuman",
+        index,
+        getPlayerValues(row)
       );
 
     }
@@ -1012,32 +1135,22 @@ function updateScoreRankings() {
 
 
 /* =========================================================
- * 役満表のトップ・最下位
+ * プレイヤー4人の値
  * ========================================================= */
 
-function updateYakumanRankings() {
+function getPlayerValues(row) {
 
-  appData.yakuman.forEach(
-    (row, index) => {
+  return [
 
-      const values = [
+    toNumber(row.name1),
 
-        toNumber(row.name1),
-        toNumber(row.name2),
-        toNumber(row.name3),
-        toNumber(row.name4)
+    toNumber(row.name2),
 
-      ];
+    toNumber(row.name3),
 
+    toNumber(row.name4)
 
-      applyRankingColors(
-        "yakuman",
-        index,
-        values
-      );
-
-    }
-  );
+  ];
 
 }
 
@@ -1051,10 +1164,6 @@ function applyRankingColors(
   index,
   values
 ) {
-
-  /*
-   * 既存の色をいったん削除
-   */
 
   const inputs =
     document.querySelectorAll(
@@ -1075,8 +1184,7 @@ function applyRankingColors(
 
 
   /*
-   * まだ全員未入力の場合は、
-   * ランキング表示をしない。
+   * 全員未入力なら彩色しない
    */
 
   const hasInput =
@@ -1093,10 +1201,6 @@ function applyRankingColors(
   }
 
 
-  /*
-   * 最大値・最小値
-   */
-
   const max =
     Math.max(
       ...values
@@ -1110,19 +1214,25 @@ function applyRankingColors(
 
 
   /*
-   * 各プレイヤーに適用
+   * 全員同点の場合は、
+   * トップ・最下位の色を付けない。
    */
+
+  if (
+    max === min
+  ) {
+
+    return;
+
+  }
+
 
   inputs.forEach(
     input => {
 
-      const field =
-        input.dataset.field;
-
-
       const playerIndex =
         Number(
-          field.replace(
+          input.dataset.field.replace(
             "name",
             ""
           )
@@ -1132,10 +1242,6 @@ function applyRankingColors(
       const value =
         values[playerIndex];
 
-
-      /*
-       * 同点トップ
-       */
 
       if (
         value === max
@@ -1147,10 +1253,6 @@ function applyRankingColors(
 
       }
 
-
-      /*
-       * 同点最下位
-       */
 
       if (
         value === min
@@ -1198,41 +1300,29 @@ function renderScoreFooter() {
 
 
       <td>
-        ${formatNumber(
-          totals.name1
-        )}
+        ${formatNumber(totals.name1)}
       </td>
 
 
       <td>
-        ${formatNumber(
-          totals.name2
-        )}
+        ${formatNumber(totals.name2)}
       </td>
 
 
       <td>
-        ${formatNumber(
-          totals.name3
-        )}
+        ${formatNumber(totals.name3)}
       </td>
 
 
       <td>
-        ${formatNumber(
-          totals.name4
-        )}
+        ${formatNumber(totals.name4)}
       </td>
 
 
       <td
-        class="diff-cell ${diffClass(
-          diffTotal
-        )}"
+        class="diff-cell ${diffClass(diffTotal)}"
       >
-        ${formatNumber(
-          diffTotal
-        )}
+        ${formatNumber(diffTotal)}
       </td>
 
 
@@ -1271,47 +1361,38 @@ function renderYakumanFooter() {
 
     <tr>
 
+      <td class="total-label">
+        合計
+      </td>
+
+
       <td></td>
 
-      <td></td>
-
 
       <td>
-        ${formatNumber(
-          totals.name1
-        )}
+        ${formatNumber(totals.name1)}
       </td>
 
 
       <td>
-        ${formatNumber(
-          totals.name2
-        )}
+        ${formatNumber(totals.name2)}
       </td>
 
 
       <td>
-        ${formatNumber(
-          totals.name3
-        )}
+        ${formatNumber(totals.name3)}
       </td>
 
 
       <td>
-        ${formatNumber(
-          totals.name4
-        )}
+        ${formatNumber(totals.name4)}
       </td>
 
 
       <td
-        class="diff-cell ${diffClass(
-          diffTotal
-        )}"
+        class="diff-cell ${diffClass(diffTotal)}"
       >
-        ${formatNumber(
-          diffTotal
-        )}
+        ${formatNumber(diffTotal)}
       </td>
 
 
@@ -1329,7 +1410,7 @@ function renderYakumanFooter() {
 
 
 /* =========================================================
- * 名前ごとの縦方向合計
+ * 合計
  * ========================================================= */
 
 function calculateTotals(rows) {
@@ -1339,9 +1420,7 @@ function calculateTotals(rows) {
     name1:
       rows.reduce(
         (sum, row) =>
-          sum + toNumber(
-            row.name1
-          ),
+          sum + toNumber(row.name1),
         0
       ),
 
@@ -1349,9 +1428,7 @@ function calculateTotals(rows) {
     name2:
       rows.reduce(
         (sum, row) =>
-          sum + toNumber(
-            row.name2
-          ),
+          sum + toNumber(row.name2),
         0
       ),
 
@@ -1359,9 +1436,7 @@ function calculateTotals(rows) {
     name3:
       rows.reduce(
         (sum, row) =>
-          sum + toNumber(
-            row.name3
-          ),
+          sum + toNumber(row.name3),
         0
       ),
 
@@ -1369,9 +1444,7 @@ function calculateTotals(rows) {
     name4:
       rows.reduce(
         (sum, row) =>
-          sum + toNumber(
-            row.name4
-          ),
+          sum + toNumber(row.name4),
         0
       )
 
@@ -1476,14 +1549,14 @@ document.addEventListener(
     }
 
 
+    /*
+     * ここが重要。
+     *
+     * 入力するたびにlocalStorageへ保存する。
+     */
+
     saveLocalData();
 
-
-    /*
-     * 数値入力時は
-     * 差分・順位・フッターを
-     * リアルタイム更新
-     */
 
     if (
       type === "score"
@@ -1507,7 +1580,7 @@ document.addEventListener(
 
 
     setStatus(
-      "編集中。入力内容はこのブラウザに保存されています。"
+      "入力内容をこの端末に保存しました。"
     );
 
   }
@@ -1515,7 +1588,7 @@ document.addEventListener(
 
 
 /* =========================================================
- * 削除イベント
+ * 削除
  * ========================================================= */
 
 document.addEventListener(
@@ -1602,8 +1675,13 @@ document.addEventListener(
     }
 
 
-    saveAndRender(
-      "削除しました。"
+    saveLocalData();
+
+    render();
+
+
+    setStatus(
+      "削除内容をこの端末に保存しました。"
     );
 
   }
@@ -1628,26 +1706,6 @@ function render() {
 
 
 /* =========================================================
- * 保存して再描画
- * ========================================================= */
-
-function saveAndRender(
-  message
-) {
-
-  saveLocalData();
-
-  render();
-
-
-  setStatus(
-    `${message} GitHubへ保存する場合はJSONを書き出してください。`
-  );
-
-}
-
-
-/* =========================================================
  * localStorage保存
  * ========================================================= */
 
@@ -1667,6 +1725,11 @@ function saveLocalData() {
     console.error(
       "localStorageへの保存に失敗しました。",
       error
+    );
+
+
+    setStatus(
+      "端末への保存に失敗しました。"
     );
 
   }
@@ -1715,7 +1778,7 @@ function loadLocalData() {
 
 
 /* =========================================================
- * JSON書き出し
+ * JSON出力
  * ========================================================= */
 
 function exportJson() {
@@ -1791,6 +1854,11 @@ function exportJson() {
   );
 
 
+  /*
+   * JSON出力したデータも、
+   * 最新状態として端末に保存する。
+   */
+
   appData.updatedAt =
     exportData.updatedAt;
 
@@ -1799,8 +1867,580 @@ function exportJson() {
 
 
   setStatus(
-    "score.jsonを書き出しました。GitHubへCommitしてください。"
+    "score.jsonを出力しました。GitHubへCommitしてください。"
   );
+
+}
+
+
+/* =========================================================
+ * PDF出力
+ *
+ * ブラウザ標準の印刷機能を利用。
+ *
+ * 「PDF出力」→ 印刷画面 →
+ * 「PDFとして保存」
+ * ========================================================= */
+
+function exportPdf() {
+
+  buildPrintArea();
+
+
+  setStatus(
+    "PDF用の印刷画面を準備しています..."
+  );
+
+
+  /*
+   * DOMの描画を待ってから印刷する。
+   */
+
+  setTimeout(
+    () => {
+
+      window.print();
+
+      setStatus(
+        "印刷画面を表示しました。PDFとして保存できます。"
+      );
+
+    },
+    100
+  );
+
+}
+
+
+/* =========================================================
+ * PDF用レイアウト生成
+ * ========================================================= */
+
+function buildPrintArea() {
+
+  const printDate =
+    document.getElementById(
+      "printDate"
+    );
+
+
+  const printPlayers =
+    document.getElementById(
+      "printPlayers"
+    );
+
+
+  const printScoreTable =
+    document.getElementById(
+      "printScoreTable"
+    );
+
+
+  const printYakumanTable =
+    document.getElementById(
+      "printYakumanTable"
+    );
+
+
+  printDate.textContent =
+    new Date().toLocaleString(
+      "ja-JP"
+    );
+
+
+  /*
+   * 参加者
+   */
+
+  printPlayers.innerHTML =
+    appData.players
+      .map(
+        name => `
+          <div class="print-player">
+            ${escapeHtml(name)}
+          </div>
+        `
+      )
+      .join("");
+
+
+  /*
+   * スコア表
+   */
+
+  printScoreTable.innerHTML =
+    buildPrintScoreTable();
+
+
+  /*
+   * 役満表
+   */
+
+  printYakumanTable.innerHTML =
+    buildPrintYakumanTable();
+
+}
+
+
+/* =========================================================
+ * PDF用スコア表
+ * ========================================================= */
+
+function buildPrintScoreTable() {
+
+  const totals =
+    calculateTotals(
+      appData.scores
+    );
+
+
+  const diffTotal =
+    appData.scores.reduce(
+      (sum, row) =>
+        sum + calculateDiff(row),
+      0
+    );
+
+
+  let html = `
+
+    <thead>
+
+      <tr>
+
+        <th>半荘</th>
+
+        <th>${escapeHtml(appData.players[0])}</th>
+
+        <th>${escapeHtml(appData.players[1])}</th>
+
+        <th>${escapeHtml(appData.players[2])}</th>
+
+        <th>${escapeHtml(appData.players[3])}</th>
+
+        <th>差分</th>
+
+        <th>備考</th>
+
+      </tr>
+
+    </thead>
+
+
+    <tbody>
+  `;
+
+
+  appData.scores.forEach(
+    row => {
+
+      const values =
+        getPlayerValues(row);
+
+
+      const ranking =
+        getRankingClasses(values);
+
+
+      const diff =
+        calculateDiff(row);
+
+
+      html += `
+
+        <tr>
+
+          <td>
+            ${row.han}
+          </td>
+
+
+          <td class="${ranking[0]}">
+            ${formatNumber(values[0])}
+          </td>
+
+
+          <td class="${ranking[1]}">
+            ${formatNumber(values[1])}
+          </td>
+
+
+          <td class="${ranking[2]}">
+            ${formatNumber(values[2])}
+          </td>
+
+
+          <td class="${ranking[3]}">
+            ${formatNumber(values[3])}
+          </td>
+
+
+          <td class="${printDiffClass(diff)}">
+            ${formatNumber(diff)}
+          </td>
+
+
+          <td>
+            ${escapeHtml(row.note)}
+          </td>
+
+        </tr>
+
+      `;
+
+    }
+  );
+
+
+  html += `
+
+    </tbody>
+
+
+    <tfoot>
+
+      <tr>
+
+        <td>
+          合計
+        </td>
+
+
+        <td>
+          ${formatNumber(totals.name1)}
+        </td>
+
+
+        <td>
+          ${formatNumber(totals.name2)}
+        </td>
+
+
+        <td>
+          ${formatNumber(totals.name3)}
+        </td>
+
+
+        <td>
+          ${formatNumber(totals.name4)}
+        </td>
+
+
+        <td class="${printDiffClass(diffTotal)}">
+          ${formatNumber(diffTotal)}
+        </td>
+
+
+        <td></td>
+
+      </tr>
+
+    </tfoot>
+
+  `;
+
+
+  return html;
+
+}
+
+
+/* =========================================================
+ * PDF用役満表
+ * ========================================================= */
+
+function buildPrintYakumanTable() {
+
+  const totals =
+    calculateTotals(
+      appData.yakuman
+    );
+
+
+  const diffTotal =
+    appData.yakuman.reduce(
+      (sum, row) =>
+        sum + calculateDiff(row),
+      0
+    );
+
+
+  let html = `
+
+    <thead>
+
+      <tr>
+
+        <th>No.</th>
+
+        <th>半荘</th>
+
+        <th>${escapeHtml(appData.players[0])}</th>
+
+        <th>${escapeHtml(appData.players[1])}</th>
+
+        <th>${escapeHtml(appData.players[2])}</th>
+
+        <th>${escapeHtml(appData.players[3])}</th>
+
+        <th>差分</th>
+
+        <th>役満名</th>
+
+        <th>備考</th>
+
+      </tr>
+
+    </thead>
+
+
+    <tbody>
+  `;
+
+
+  appData.yakuman.forEach(
+    row => {
+
+      const values =
+        getPlayerValues(row);
+
+
+      const ranking =
+        getRankingClasses(values);
+
+
+      const diff =
+        calculateDiff(row);
+
+
+      html += `
+
+        <tr>
+
+          <td>
+            ${row.no}
+          </td>
+
+
+          <td>
+            ${inputValue(row.han)}
+          </td>
+
+
+          <td class="${ranking[0]}">
+            ${formatNumber(values[0])}
+          </td>
+
+
+          <td class="${ranking[1]}">
+            ${formatNumber(values[1])}
+          </td>
+
+
+          <td class="${ranking[2]}">
+            ${formatNumber(values[2])}
+          </td>
+
+
+          <td class="${ranking[3]}">
+            ${formatNumber(values[3])}
+          </td>
+
+
+          <td class="${printDiffClass(diff)}">
+            ${formatNumber(diff)}
+          </td>
+
+
+          <td>
+            ${escapeHtml(row.yakumanName)}
+          </td>
+
+
+          <td>
+            ${escapeHtml(row.note)}
+          </td>
+
+        </tr>
+
+      `;
+
+    }
+  );
+
+
+  html += `
+
+    </tbody>
+
+
+    <tfoot>
+
+      <tr>
+
+        <td>
+          合計
+        </td>
+
+
+        <td></td>
+
+
+        <td>
+          ${formatNumber(totals.name1)}
+        </td>
+
+
+        <td>
+          ${formatNumber(totals.name2)}
+        </td>
+
+
+        <td>
+          ${formatNumber(totals.name3)}
+        </td>
+
+
+        <td>
+          ${formatNumber(totals.name4)}
+        </td>
+
+
+        <td class="${printDiffClass(diffTotal)}">
+          ${formatNumber(diffTotal)}
+        </td>
+
+
+        <td></td>
+
+
+        <td></td>
+
+      </tr>
+
+    </tfoot>
+
+  `;
+
+
+  return html;
+
+}
+
+
+/* =========================================================
+ * PDF用ランキングクラス
+ * ========================================================= */
+
+function getRankingClasses(
+  values
+) {
+
+  const result = [
+    "",
+    "",
+    "",
+    ""
+  ];
+
+
+  const hasInput =
+    values.some(
+      value =>
+        value !== 0
+    );
+
+
+  if (!hasInput) {
+
+    return result;
+
+  }
+
+
+  const max =
+    Math.max(
+      ...values
+    );
+
+
+  const min =
+    Math.min(
+      ...values
+    );
+
+
+  /*
+   * 全員同点なら色を付けない。
+   */
+
+  if (
+    max === min
+  ) {
+
+    return result;
+
+  }
+
+
+  values.forEach(
+    (value, index) => {
+
+      if (
+        value === max
+      ) {
+
+        result[index] =
+          "print-top";
+
+      }
+
+
+      if (
+        value === min
+      ) {
+
+        result[index] =
+          "print-bottom";
+
+      }
+
+    }
+  );
+
+
+  return result;
+
+}
+
+
+/* =========================================================
+ * PDF用差分クラス
+ * ========================================================= */
+
+function printDiffClass(
+  value
+) {
+
+  if (
+    value === 0
+  ) {
+
+    return "print-zero";
+
+  }
+
+
+  if (
+    value > 0
+  ) {
+
+    return "print-positive";
+
+  }
+
+
+  return "print-negative";
 
 }
 
@@ -1815,7 +2455,7 @@ async function reloadFromGitHub() {
 
     !confirm(
       "GitHub上のscore.jsonを読み込みます。\n\n" +
-      "現在ブラウザで編集中の未書き出しデータは上書きされます。\n\n" +
+      "この端末で現在編集中のデータは破棄されます。\n\n" +
       "続行しますか？"
     )
 
@@ -1861,6 +2501,10 @@ async function reloadFromGitHub() {
       );
 
 
+    /*
+     * GitHub版をlocalStorageへ保存し直す。
+     */
+
     saveLocalData();
 
 
@@ -1868,7 +2512,7 @@ async function reloadFromGitHub() {
 
 
     setStatus(
-      `GitHubのデータを再読み込みしました。更新日時: ${
+      `GitHubのデータを読み込みました。更新日時: ${
         formatDate(
           appData.updatedAt
         )
@@ -1928,10 +2572,44 @@ function toNumber(value) {
 
 
 /* =========================================================
+ * null許容数値
+ * ========================================================= */
+
+function nullableNumber(
+  value
+) {
+
+  if (
+
+    value === null ||
+    value === undefined ||
+    value === ""
+
+  ) {
+
+    return null;
+
+  }
+
+
+  const number =
+    Number(value);
+
+
+  return Number.isFinite(number)
+    ? number
+    : null;
+
+}
+
+
+/* =========================================================
  * 入力値
  * ========================================================= */
 
-function inputValue(value) {
+function inputValue(
+  value
+) {
 
   if (
 
@@ -1956,7 +2634,9 @@ function inputValue(value) {
  * 数値表示
  * ========================================================= */
 
-function formatNumber(value) {
+function formatNumber(
+  value
+) {
 
   return Number(
     value
@@ -1968,10 +2648,12 @@ function formatNumber(value) {
 
 
 /* =========================================================
- * 差分CSSクラス
+ * 差分CSS
  * ========================================================= */
 
-function diffClass(value) {
+function diffClass(
+  value
+) {
 
   if (
     value === 0
@@ -1997,10 +2679,12 @@ function diffClass(value) {
 
 
 /* =========================================================
- * 日時表示
+ * 日時
  * ========================================================= */
 
-function formatDate(value) {
+function formatDate(
+  value
+) {
 
   if (!value) {
 
@@ -2032,10 +2716,10 @@ function formatDate(value) {
 
 
 /* =========================================================
- * HTML属性エスケープ
+ * HTMLエスケープ
  * ========================================================= */
 
-function escapeHtmlAttribute(
+function escapeHtml(
   value
 ) {
 
@@ -2044,11 +2728,6 @@ function escapeHtmlAttribute(
     .replaceAll(
       "&",
       "&amp;"
-    )
-
-    .replaceAll(
-      '"',
-      "&quot;"
     )
 
     .replaceAll(
@@ -2062,6 +2741,11 @@ function escapeHtmlAttribute(
     )
 
     .replaceAll(
+      '"',
+      "&quot;"
+    )
+
+    .replaceAll(
       "'",
       "&#039;"
     );
@@ -2070,7 +2754,22 @@ function escapeHtmlAttribute(
 
 
 /* =========================================================
- * ステータス表示
+ * HTML属性エスケープ
+ * ========================================================= */
+
+function escapeHtmlAttribute(
+  value
+) {
+
+  return escapeHtml(
+    value
+  );
+
+}
+
+
+/* =========================================================
+ * ステータス
  * ========================================================= */
 
 function setStatus(
