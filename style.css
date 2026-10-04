@@ -13,6 +13,7 @@
   --danger: #dc2626;
   --danger-hover: #b91c1c;
 
+  /* 差分 */
   --positive: #dc2626;
   --positive-background: #fee2e2;
 
@@ -21,6 +22,16 @@
 
   --zero: #64748b;
   --zero-background: #f8fafc;
+
+  /* トップ */
+  --top-color: #b91c1c;
+  --top-background: #fee2e2;
+  --top-border: #fca5a5;
+
+  /* 最下位 */
+  --bottom-color: #1d4ed8;
+  --bottom-background: #dbeafe;
+  --bottom-border: #93c5fd;
 
   --footer-background: #f1f5f9;
 
@@ -374,6 +385,46 @@ input:focus {
   color: #475569;
 
   font-weight: 700;
+}
+
+
+/* =========================================================
+ * 各レコードのトップ
+ * ========================================================= */
+
+.score-top {
+  color: var(--top-color) !important;
+
+  background: var(--top-background) !important;
+
+  border-color: var(--top-border) !important;
+
+  font-weight: 800;
+}
+
+
+/* =========================================================
+ * 各レコードの最下位
+ * ========================================================= */
+
+.score-bottom {
+  color: var(--bottom-color) !important;
+
+  background: var(--bottom-background) !important;
+
+  border-color: var(--bottom-border) !important;
+
+  font-weight: 800;
+}
+
+
+/*
+ * input自身を彩色する場合
+ */
+
+input.score-top,
+input.score-bottom {
+  font-weight: 800;
 }
 
 
