@@ -11,29 +11,43 @@
   --primary-hover: #1d4ed8;
 
   --danger: #dc2626;
-  --danger-background: #fee2e2;
-
-  --warning: #d97706;
-  --warning-background: #fef3c7;
+  --danger-hover: #b91c1c;
 
   --positive: #dc2626;
+  --positive-background: #fee2e2;
+
   --negative: #2563eb;
+  --negative-background: #dbeafe;
+
+  --zero: #64748b;
+  --zero-background: #f8fafc;
 
   --footer-background: #f1f5f9;
+
+  --warning-background: #fef3c7;
+  --warning-text: #92400e;
 }
+
+
+/* =========================================================
+ * 全体
+ * ========================================================= */
 
 * {
   box-sizing: border-box;
 }
 
+
 html {
   font-size: 16px;
 }
+
 
 body {
   margin: 0;
 
   background: var(--background);
+
   color: var(--text);
 
   font-family:
@@ -47,14 +61,21 @@ body {
 }
 
 
-/* ============================== */
-/* ヘッダー */
-/* ============================== */
+/* =========================================================
+ * ヘッダー
+ * ========================================================= */
 
 .page-header {
+  position: sticky;
+
+  top: 0;
+
+  z-index: 100;
+
   display: flex;
 
   justify-content: space-between;
+
   align-items: center;
 
   gap: 20px;
@@ -64,17 +85,15 @@ body {
   background: #ffffff;
 
   border-bottom: 1px solid var(--border);
-
-  position: sticky;
-  top: 0;
-  z-index: 100;
 }
+
 
 .page-header h1 {
   margin: 0 0 4px;
 
   font-size: 1.6rem;
 }
+
 
 #status {
   margin: 0;
@@ -84,17 +103,21 @@ body {
   font-size: 0.85rem;
 }
 
+
 .header-actions {
   display: flex;
+
   gap: 8px;
 }
 
 
-/* ============================== */
-/* メイン */
-/* ============================== */
+/* =========================================================
+ * メイン
+ * ========================================================= */
 
 main {
+  width: 100%;
+
   max-width: 1400px;
 
   margin: 0 auto;
@@ -103,9 +126,9 @@ main {
 }
 
 
-/* ============================== */
-/* カード */
-/* ============================== */
+/* =========================================================
+ * カード
+ * ========================================================= */
 
 .card {
   margin-bottom: 24px;
@@ -118,13 +141,16 @@ main {
 
   border-radius: 10px;
 
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.04);
 }
+
 
 .section-header {
   display: flex;
 
   justify-content: space-between;
+
   align-items: center;
 
   gap: 20px;
@@ -132,11 +158,13 @@ main {
   margin-bottom: 16px;
 }
 
+
 .section-header h2 {
   margin: 0 0 4px;
 
   font-size: 1.25rem;
 }
+
 
 .description {
   margin: 0;
@@ -147,9 +175,36 @@ main {
 }
 
 
-/* ============================== */
-/* ボタン */
-/* ============================== */
+/* =========================================================
+ * 参加者設定
+ * ========================================================= */
+
+.player-settings {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 12px;
+}
+
+
+.player-settings label {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 6px;
+
+  font-size: 0.85rem;
+
+  font-weight: 600;
+}
+
+
+/* =========================================================
+ * ボタン
+ * ========================================================= */
 
 .button {
   border: none;
@@ -171,9 +226,11 @@ main {
     transform 0.05s;
 }
 
+
 .button:active {
   transform: translateY(1px);
 }
+
 
 .button.primary {
   color: #ffffff;
@@ -181,9 +238,11 @@ main {
   background: var(--primary);
 }
 
+
 .button.primary:hover {
   background: var(--primary-hover);
 }
+
 
 .button.secondary {
   color: #333333;
@@ -191,51 +250,59 @@ main {
   background: #e5e7eb;
 }
 
+
 .button.secondary:hover {
   background: #d1d5db;
 }
 
+
 .button.delete {
+  padding: 6px 10px;
+
   color: #ffffff;
 
   background: var(--danger);
 
-  padding: 6px 10px;
-
   font-size: 0.8rem;
 }
 
+
 .button.delete:hover {
-  background: #b91c1c;
+  background: var(--danger-hover);
 }
 
 
-/* ============================== */
-/* テーブル */
-/* ============================== */
+/* =========================================================
+ * テーブル
+ * ========================================================= */
 
 .table-wrapper {
+  width: 100%;
+
   overflow-x: auto;
 }
+
 
 table {
   width: 100%;
 
-  border-collapse: collapse;
-
   min-width: 850px;
+
+  border-collapse: collapse;
 }
+
 
 th,
 td {
-  border: 1px solid var(--border);
-
   padding: 7px;
+
+  border: 1px solid var(--border);
 
   text-align: center;
 
   vertical-align: middle;
 }
+
 
 th {
   background: #eef2f7;
@@ -245,6 +312,7 @@ th {
   white-space: nowrap;
 }
 
+
 tfoot td {
   background: var(--footer-background);
 
@@ -252,9 +320,9 @@ tfoot td {
 }
 
 
-/* ============================== */
-/* 入力欄 */
-/* ============================== */
+/* =========================================================
+ * 入力欄
+ * ========================================================= */
 
 input[type="number"],
 input[type="text"] {
@@ -275,109 +343,109 @@ input[type="text"] {
   font-size: 0.95rem;
 }
 
+
 input[type="number"] {
   text-align: right;
 }
 
+
 input[type="text"] {
   text-align: left;
 }
+
 
 input:focus {
   outline: none;
 
   border-color: var(--primary);
 
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.12);
+  box-shadow:
+    0 0 0 2px rgba(37, 99, 235, 0.12);
 }
 
 
-/* ============================== */
-/* 半荘数 / No. */
-/* ============================== */
+/* =========================================================
+ * 半荘数 / No.
+ * ========================================================= */
 
 .index-cell {
-  font-weight: 700;
-
   background: #f8fafc;
 
   color: #475569;
+
+  font-weight: 700;
 }
 
 
-/* ============================== */
-/* 差分 */
-/* ============================== */
+/* =========================================================
+ * 差分
+ * ========================================================= */
 
 .diff-cell {
-  font-weight: 700;
-
   min-width: 90px;
+
+  font-weight: 700;
 }
+
 
 .diff-zero {
-  color: #64748b;
+  color: var(--zero);
 
-  background: #f8fafc;
+  background: var(--zero-background);
 }
+
 
 .diff-positive {
   color: var(--positive);
 
-  background: #fee2e2;
-}
+  background: var(--positive-background);
 
-.diff-negative {
-  color: var(--negative);
-
-  background: #dbeafe;
-}
-
-
-/*
- * 「0以外の値は例外として視覚的にわかりやすく彩色」
- *
- * 正数 → 赤
- * 負数 → 青
- */
-
-.diff-cell.diff-positive,
-.diff-cell.diff-negative {
   font-weight: 800;
 }
 
 
-/* ============================== */
-/* フッター */
-/* ============================== */
+.diff-negative {
+  color: var(--negative);
 
-.total-label {
-  text-align: right;
+  background: var(--negative-background);
 
-  padding-right: 12px;
+  font-weight: 800;
 }
 
 
-/* ============================== */
-/* 操作列 */
-/* ============================== */
+/* =========================================================
+ * 合計
+ * ========================================================= */
+
+.total-label {
+  padding-right: 12px;
+
+  text-align: right;
+}
+
+
+/* =========================================================
+ * 操作列
+ * ========================================================= */
 
 .operation-column {
   width: 70px;
 }
+
 
 .operation-cell {
   width: 70px;
 }
 
 
-/* ============================== */
-/* 説明 */
-/* ============================== */
+/* =========================================================
+ * 説明
+ * ========================================================= */
 
 .help ol {
   margin-bottom: 20px;
 }
+
 
 .warning {
   margin: 0;
@@ -388,30 +456,30 @@ input:focus {
 
   background: var(--warning-background);
 
-  color: #92400e;
+  color: var(--warning-text);
 
   font-size: 0.9rem;
 }
 
 
-/* ============================== */
-/* フッター */
-/* ============================== */
+/* =========================================================
+ * フッター
+ * ========================================================= */
 
 .page-footer {
   padding: 20px;
 
-  text-align: center;
-
   color: #64748b;
 
   font-size: 0.8rem;
+
+  text-align: center;
 }
 
 
-/* ============================== */
-/* スマートフォン */
-/* ============================== */
+/* =========================================================
+ * スマートフォン
+ * ========================================================= */
 
 @media (max-width: 700px) {
 
@@ -421,11 +489,14 @@ input:focus {
     align-items: stretch;
   }
 
+
   .header-actions {
     display: grid;
 
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns:
+      1fr 1fr;
   }
+
 
   .section-header {
     flex-direction: column;
@@ -433,15 +504,41 @@ input:focus {
     align-items: stretch;
   }
 
+
+  .player-settings {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+
   main {
     padding: 12px;
   }
+
 
   .card {
     padding: 12px;
   }
 
+
   .button {
     padding: 10px 12px;
   }
+
+}
+
+
+@media (max-width: 450px) {
+
+  .player-settings {
+    grid-template-columns:
+      1fr;
+  }
+
+
+  .header-actions {
+    grid-template-columns:
+      1fr;
+  }
+
 }
