@@ -46,29 +46,36 @@
 
       <div class="header-actions">
 
-        <!-- JSON読込 -->
+        <!-- =================================================
+             JSON読込
+             
+             JavaScriptから.click()する方式ではなく、
+             labelとinput[type=file]を直接関連付ける。
+             
+             Android Chrome / iPhone Chromeで
+             ファイル選択画面を開きやすくするための構成。
+             ================================================= -->
 
-        <button
+        <label
+          for="jsonFileInput"
           id="importButton"
           class="button secondary"
-          type="button"
         >
           JSON読込
-        </button>
+        </label>
 
-
-        <!-- JSONファイル選択用。
-             通常は非表示 -->
 
         <input
           id="jsonFileInput"
           type="file"
           accept=".json,application/json"
-          hidden
+          style="display: none;"
         >
 
 
-        <!-- JSON出力 -->
+        <!-- =================================================
+             JSON出力
+             ================================================= -->
 
         <button
           id="exportButton"
@@ -79,7 +86,9 @@
         </button>
 
 
-        <!-- PDF -->
+        <!-- =================================================
+             PDF出力
+             ================================================= -->
 
         <button
           id="pdfButton"
@@ -90,7 +99,9 @@
         </button>
 
 
-        <!-- GitHub -->
+        <!-- =================================================
+             GitHubから再読み込み
+             ================================================= -->
 
         <button
           id="reloadButton"
@@ -407,11 +418,11 @@
           <li>
             「JSON出力」で、現在のデータを
             <code>score.json</code>
-            として携帯などに保存できます。
+            として保存できます。
           </li>
 
           <li>
-            「JSON読込」で、携帯などに保存してある
+            「JSON読込」で、端末に保存してある
             <code>score.json</code>
             を読み込めます。
           </li>
@@ -535,6 +546,10 @@
 
   </div>
 
+
+  <!-- =====================================================
+       JavaScript
+       ===================================================== -->
 
   <script src="app.js"></script>
 
