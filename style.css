@@ -1,42 +1,71 @@
+/* =========================================================
+ * 基本設定
+ * ========================================================= */
+
 :root {
+
   --background: #f4f6f8;
+
   --card-background: #ffffff;
 
   --border: #d8dde3;
 
   --text: #222222;
+
   --sub-text: #666666;
 
   --primary: #2563eb;
+
   --primary-hover: #1d4ed8;
 
+  --pdf: #7c3aed;
+
+  --pdf-hover: #6d28d9;
+
   --danger: #dc2626;
+
   --danger-hover: #b91c1c;
 
+
   /* 差分 */
+
   --positive: #dc2626;
+
   --positive-background: #fee2e2;
 
   --negative: #2563eb;
+
   --negative-background: #dbeafe;
 
   --zero: #64748b;
+
   --zero-background: #f8fafc;
 
+
   /* トップ */
+
   --top-color: #b91c1c;
+
   --top-background: #fee2e2;
+
   --top-border: #fca5a5;
 
+
   /* 最下位 */
+
   --bottom-color: #1d4ed8;
+
   --bottom-background: #dbeafe;
+
   --bottom-border: #93c5fd;
+
 
   --footer-background: #f1f5f9;
 
   --warning-background: #fef3c7;
+
   --warning-text: #92400e;
+
 }
 
 
@@ -55,6 +84,7 @@ html {
 
 
 body {
+
   margin: 0;
 
   background: var(--background);
@@ -69,6 +99,7 @@ body {
     "Hiragino Sans",
     Meiryo,
     sans-serif;
+
 }
 
 
@@ -77,6 +108,7 @@ body {
  * ========================================================= */
 
 .page-header {
+
   position: sticky;
 
   top: 0;
@@ -96,29 +128,40 @@ body {
   background: #ffffff;
 
   border-bottom: 1px solid var(--border);
+
 }
 
 
 .page-header h1 {
+
   margin: 0 0 4px;
 
   font-size: 1.6rem;
+
 }
 
 
 #status {
+
   margin: 0;
 
   color: var(--sub-text);
 
   font-size: 0.85rem;
+
 }
 
 
 .header-actions {
+
   display: flex;
 
+  flex-wrap: wrap;
+
+  justify-content: flex-end;
+
   gap: 8px;
+
 }
 
 
@@ -127,13 +170,15 @@ body {
  * ========================================================= */
 
 main {
+
   width: 100%;
 
-  max-width: 1400px;
+  max-width: 1500px;
 
   margin: 0 auto;
 
   padding: 24px;
+
 }
 
 
@@ -142,6 +187,7 @@ main {
  * ========================================================= */
 
 .card {
+
   margin-bottom: 24px;
 
   padding: 20px;
@@ -154,10 +200,12 @@ main {
 
   box-shadow:
     0 2px 6px rgba(0, 0, 0, 0.04);
+
 }
 
 
 .section-header {
+
   display: flex;
 
   justify-content: space-between;
@@ -167,22 +215,27 @@ main {
   gap: 20px;
 
   margin-bottom: 16px;
+
 }
 
 
 .section-header h2 {
+
   margin: 0 0 4px;
 
   font-size: 1.25rem;
+
 }
 
 
 .description {
+
   margin: 0;
 
   color: var(--sub-text);
 
   font-size: 0.85rem;
+
 }
 
 
@@ -191,16 +244,19 @@ main {
  * ========================================================= */
 
 .player-settings {
+
   display: grid;
 
   grid-template-columns:
     repeat(4, 1fr);
 
   gap: 12px;
+
 }
 
 
 .player-settings label {
+
   display: flex;
 
   flex-direction: column;
@@ -210,6 +266,7 @@ main {
   font-size: 0.85rem;
 
   font-weight: 600;
+
 }
 
 
@@ -218,6 +275,7 @@ main {
  * ========================================================= */
 
 .button {
+
   border: none;
 
   border-radius: 6px;
@@ -235,39 +293,67 @@ main {
   transition:
     background-color 0.15s,
     transform 0.05s;
+
 }
 
 
 .button:active {
+
   transform: translateY(1px);
+
 }
 
 
 .button.primary {
+
   color: #ffffff;
 
   background: var(--primary);
+
 }
 
 
 .button.primary:hover {
+
   background: var(--primary-hover);
+
 }
 
 
 .button.secondary {
+
   color: #333333;
 
   background: #e5e7eb;
+
 }
 
 
 .button.secondary:hover {
+
   background: #d1d5db;
+
+}
+
+
+.button.pdf {
+
+  color: #ffffff;
+
+  background: var(--pdf);
+
+}
+
+
+.button.pdf:hover {
+
+  background: var(--pdf-hover);
+
 }
 
 
 .button.delete {
+
   padding: 6px 10px;
 
   color: #ffffff;
@@ -275,11 +361,14 @@ main {
   background: var(--danger);
 
   font-size: 0.8rem;
+
 }
 
 
 .button.delete:hover {
+
   background: var(--danger-hover);
+
 }
 
 
@@ -288,23 +377,28 @@ main {
  * ========================================================= */
 
 .table-wrapper {
+
   width: 100%;
 
   overflow-x: auto;
+
 }
 
 
 table {
+
   width: 100%;
 
-  min-width: 850px;
+  min-width: 900px;
 
   border-collapse: collapse;
+
 }
 
 
 th,
 td {
+
   padding: 7px;
 
   border: 1px solid var(--border);
@@ -312,22 +406,27 @@ td {
   text-align: center;
 
   vertical-align: middle;
+
 }
 
 
 th {
+
   background: #eef2f7;
 
   font-weight: 700;
 
   white-space: nowrap;
+
 }
 
 
 tfoot td {
+
   background: var(--footer-background);
 
   font-weight: 700;
+
 }
 
 
@@ -337,6 +436,7 @@ tfoot td {
 
 input[type="number"],
 input[type="text"] {
+
   width: 100%;
 
   min-width: 70px;
@@ -352,26 +452,33 @@ input[type="text"] {
   color: var(--text);
 
   font-size: 0.95rem;
+
 }
 
 
 input[type="number"] {
+
   text-align: right;
+
 }
 
 
 input[type="text"] {
+
   text-align: left;
+
 }
 
 
 input:focus {
+
   outline: none;
 
   border-color: var(--primary);
 
   box-shadow:
     0 0 0 2px rgba(37, 99, 235, 0.12);
+
 }
 
 
@@ -380,19 +487,22 @@ input:focus {
  * ========================================================= */
 
 .index-cell {
+
   background: #f8fafc;
 
   color: #475569;
 
   font-weight: 700;
+
 }
 
 
 /* =========================================================
- * 各レコードのトップ
+ * トップ
  * ========================================================= */
 
 .score-top {
+
   color: var(--top-color) !important;
 
   background: var(--top-background) !important;
@@ -400,14 +510,16 @@ input:focus {
   border-color: var(--top-border) !important;
 
   font-weight: 800;
+
 }
 
 
 /* =========================================================
- * 各レコードの最下位
+ * 最下位
  * ========================================================= */
 
 .score-bottom {
+
   color: var(--bottom-color) !important;
 
   background: var(--bottom-background) !important;
@@ -415,16 +527,7 @@ input:focus {
   border-color: var(--bottom-border) !important;
 
   font-weight: 800;
-}
 
-
-/*
- * input自身を彩色する場合
- */
-
-input.score-top,
-input.score-bottom {
-  font-weight: 800;
 }
 
 
@@ -433,34 +536,42 @@ input.score-bottom {
  * ========================================================= */
 
 .diff-cell {
+
   min-width: 90px;
 
   font-weight: 700;
+
 }
 
 
 .diff-zero {
+
   color: var(--zero);
 
   background: var(--zero-background);
+
 }
 
 
 .diff-positive {
+
   color: var(--positive);
 
   background: var(--positive-background);
 
   font-weight: 800;
+
 }
 
 
 .diff-negative {
+
   color: var(--negative);
 
   background: var(--negative-background);
 
   font-weight: 800;
+
 }
 
 
@@ -469,23 +580,29 @@ input.score-bottom {
  * ========================================================= */
 
 .total-label {
+
   padding-right: 12px;
 
   text-align: right;
+
 }
 
 
 /* =========================================================
- * 操作列
+ * 操作
  * ========================================================= */
 
 .operation-column {
+
   width: 70px;
+
 }
 
 
 .operation-cell {
+
   width: 70px;
+
 }
 
 
@@ -494,11 +611,14 @@ input.score-bottom {
  * ========================================================= */
 
 .help ol {
+
   margin-bottom: 20px;
+
 }
 
 
 .warning {
+
   margin: 0;
 
   padding: 12px;
@@ -510,6 +630,20 @@ input.score-bottom {
   color: var(--warning-text);
 
   font-size: 0.9rem;
+
+}
+
+
+code {
+
+  padding: 2px 5px;
+
+  border-radius: 4px;
+
+  background: #f1f5f9;
+
+  font-family: monospace;
+
 }
 
 
@@ -518,6 +652,7 @@ input.score-bottom {
  * ========================================================= */
 
 .page-footer {
+
   padding: 20px;
 
   color: #64748b;
@@ -525,6 +660,18 @@ input.score-bottom {
   font-size: 0.8rem;
 
   text-align: center;
+
+}
+
+
+/* =========================================================
+ * PDF・印刷用エリア
+ * ========================================================= */
+
+#printArea {
+
+  display: none;
+
 }
 
 
@@ -532,48 +679,55 @@ input.score-bottom {
  * スマートフォン
  * ========================================================= */
 
-@media (max-width: 700px) {
+@media (max-width: 800px) {
 
   .page-header {
+
     flex-direction: column;
 
     align-items: stretch;
+
   }
 
 
   .header-actions {
+
     display: grid;
 
     grid-template-columns:
-      1fr 1fr;
+      repeat(2, 1fr);
+
   }
 
 
   .section-header {
+
     flex-direction: column;
 
     align-items: stretch;
+
   }
 
 
   .player-settings {
+
     grid-template-columns:
       repeat(2, 1fr);
+
   }
 
 
   main {
+
     padding: 12px;
+
   }
 
 
   .card {
+
     padding: 12px;
-  }
 
-
-  .button {
-    padding: 10px 12px;
   }
 
 }
@@ -582,14 +736,289 @@ input.score-bottom {
 @media (max-width: 450px) {
 
   .player-settings {
+
     grid-template-columns:
       1fr;
+
   }
 
 
   .header-actions {
+
     grid-template-columns:
       1fr;
+
+  }
+
+}
+
+
+/* =========================================================
+ * 印刷
+ * ========================================================= */
+
+@media print {
+
+  @page {
+
+    size: A4 landscape;
+
+    margin: 10mm;
+
+  }
+
+
+  body {
+
+    margin: 0;
+
+    background: #ffffff;
+
+  }
+
+
+  #app {
+
+    display: none !important;
+
+  }
+
+
+  #printArea {
+
+    display: block !important;
+
+    width: 100%;
+
+    color: #111111;
+
+    background: #ffffff;
+
+  }
+
+
+  .print-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-end;
+
+    margin-bottom: 8mm;
+
+    border-bottom: 2px solid #111111;
+
+    padding-bottom: 3mm;
+
+  }
+
+
+  .print-header h1 {
+
+    margin: 0;
+
+    font-size: 22pt;
+
+  }
+
+
+  .print-header p {
+
+    margin: 0;
+
+    font-size: 9pt;
+
+  }
+
+
+  .print-players {
+
+    margin-bottom: 7mm;
+
+  }
+
+
+  .print-players h2,
+  #printArea section > h2 {
+
+    margin: 0 0 3mm;
+
+    font-size: 14pt;
+
+  }
+
+
+  .print-player-list {
+
+    display: grid;
+
+    grid-template-columns:
+      repeat(4, 1fr);
+
+    gap: 3mm;
+
+  }
+
+
+  .print-player {
+
+    padding: 3mm;
+
+    border: 1px solid #999999;
+
+    text-align: center;
+
+    font-size: 11pt;
+
+    font-weight: 700;
+
+  }
+
+
+  .print-table {
+
+    width: 100%;
+
+    min-width: 0;
+
+    border-collapse: collapse;
+
+    table-layout: fixed;
+
+    font-size: 8.5pt;
+
+  }
+
+
+  .print-table th,
+  .print-table td {
+
+    padding: 1.8mm;
+
+    border: 1px solid #777777;
+
+    text-align: center;
+
+    vertical-align: middle;
+
+    word-break: break-word;
+
+  }
+
+
+  .print-table th {
+
+    background: #eeeeee !important;
+
+    color: #111111 !important;
+
+    font-weight: 700;
+
+  }
+
+
+  .print-table tfoot td {
+
+    background: #e5e7eb !important;
+
+    font-weight: 800;
+
+  }
+
+
+  .print-top {
+
+    color: #991b1b !important;
+
+    background: #fee2e2 !important;
+
+    font-weight: 800;
+
+    -webkit-print-color-adjust: exact;
+
+    print-color-adjust: exact;
+
+  }
+
+
+  .print-bottom {
+
+    color: #1e40af !important;
+
+    background: #dbeafe !important;
+
+    font-weight: 800;
+
+    -webkit-print-color-adjust: exact;
+
+    print-color-adjust: exact;
+
+  }
+
+
+  .print-positive {
+
+    color: #991b1b !important;
+
+    background: #fee2e2 !important;
+
+    font-weight: 700;
+
+    -webkit-print-color-adjust: exact;
+
+    print-color-adjust: exact;
+
+  }
+
+
+  .print-negative {
+
+    color: #1e40af !important;
+
+    background: #dbeafe !important;
+
+    font-weight: 700;
+
+    -webkit-print-color-adjust: exact;
+
+    print-color-adjust: exact;
+
+  }
+
+
+  .print-zero {
+
+    color: #475569 !important;
+
+    background: #f8fafc !important;
+
+  }
+
+
+  .print-yakuman-section {
+
+    margin-top: 10mm;
+
+    break-inside: avoid;
+
+  }
+
+
+  .print-footer {
+
+    margin-top: 7mm;
+
+    padding-top: 2mm;
+
+    border-top: 1px solid #aaaaaa;
+
+    color: #666666;
+
+    font-size: 7pt;
+
+    text-align: right;
+
   }
 
 }
