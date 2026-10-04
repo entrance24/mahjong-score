@@ -1,360 +1,491 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>麻雀スコア</title>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
-  <link rel="stylesheet" href="style.css">
+  <meta
+    name="theme-color"
+    content="#2563eb"
+  >
+
+  <title>麻雀スコア表</title>
+
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
 </head>
+
 
 <body>
 
-  <!-- ============================== -->
-  <!-- ヘッダー -->
-  <!-- ============================== -->
+  <!-- =====================================================
+       通常画面
+       ===================================================== -->
 
-  <header class="page-header">
+  <div id="app">
 
-    <div>
-      <h1>麻雀スコア</h1>
+    <header class="page-header">
 
-      <p id="status">
-        データを読み込んでいます...
-      </p>
-    </div>
+      <div>
 
-    <div class="header-actions">
+        <h1>
+          麻雀スコア表
+        </h1>
 
-      <button
-        id="reloadButton"
-        class="button secondary"
-        type="button"
-      >
-        GitHubのデータを再読み込み
-      </button>
-
-      <button
-        id="exportButton"
-        class="button primary"
-        type="button"
-      >
-        JSONを書き出す
-      </button>
-
-    </div>
-
-  </header>
-
-
-  <main>
-
-    <!-- ============================== -->
-    <!-- 参加者設定 -->
-    <!-- ============================== -->
-
-    <section class="card">
-
-      <div class="section-header">
-
-        <div>
-          <h2>参加者設定</h2>
-
-          <p class="description">
-            名前を変更すると、スコア表・役満表の見出しに反映されます。
-          </p>
-        </div>
+        <p id="status">
+          読み込み中...
+        </p>
 
       </div>
 
 
-      <div class="player-settings">
-
-        <label>
-          名前1
-
-          <input
-            type="text"
-            id="playerName1"
-            placeholder="名前1"
-            maxlength="30"
-          >
-        </label>
-
-
-        <label>
-          名前2
-
-          <input
-            type="text"
-            id="playerName2"
-            placeholder="名前2"
-            maxlength="30"
-          >
-        </label>
-
-
-        <label>
-          名前3
-
-          <input
-            type="text"
-            id="playerName3"
-            placeholder="名前3"
-            maxlength="30"
-          >
-        </label>
-
-
-        <label>
-          名前4
-
-          <input
-            type="text"
-            id="playerName4"
-            placeholder="名前4"
-            maxlength="30"
-          >
-        </label>
-
-      </div>
-
-    </section>
-
-
-    <!-- ============================== -->
-    <!-- スコア表 -->
-    <!-- ============================== -->
-
-    <section class="card">
-
-      <div class="section-header">
-
-        <div>
-          <h2>スコア表</h2>
-
-          <p class="description">
-            通常の半荘結果を入力します。
-          </p>
-        </div>
-
+      <div class="header-actions">
 
         <button
-          id="addScoreButton"
+          id="exportButton"
           class="button primary"
           type="button"
         >
-          ＋ 半荘を追加
+          JSON出力
+        </button>
+
+
+        <button
+          id="pdfButton"
+          class="button pdf"
+          type="button"
+        >
+          PDF出力
+        </button>
+
+
+        <button
+          id="reloadButton"
+          class="button secondary"
+          type="button"
+        >
+          GitHubから再読み込み
         </button>
 
       </div>
 
-
-      <div class="table-wrapper">
-
-        <table id="scoreTable">
-
-          <thead>
-
-            <tr>
-              <th>半荘数</th>
-
-              <th id="scoreName1">
-                名前1
-              </th>
-
-              <th id="scoreName2">
-                名前2
-              </th>
-
-              <th id="scoreName3">
-                名前3
-              </th>
-
-              <th id="scoreName4">
-                名前4
-              </th>
-
-              <th>差分</th>
-
-              <th>備考</th>
-
-              <th class="operation-column">
-                操作
-              </th>
-            </tr>
-
-          </thead>
+    </header>
 
 
-          <tbody id="scoreTableBody"></tbody>
+    <main>
 
+      <!-- ===================================================
+           参加者設定
+           =================================================== -->
 
-          <tfoot id="scoreTableFooter"></tfoot>
+      <section class="card">
 
-        </table>
+        <div class="section-header">
 
-      </div>
+          <div>
 
-    </section>
+            <h2>
+              参加者
+            </h2>
 
+            <p class="description">
+              名前を変更すると、スコア表・役満表・PDFに反映されます。
+            </p>
 
-    <!-- ============================== -->
-    <!-- 役満表 -->
-    <!-- ============================== -->
+          </div>
 
-    <section class="card">
-
-      <div class="section-header">
-
-        <div>
-          <h2>役満表</h2>
-
-          <p class="description">
-            役満が出た半荘を記録します。
-          </p>
         </div>
 
 
-        <button
-          id="addYakumanButton"
-          class="button primary"
-          type="button"
-        >
-          ＋ 役満を追加
-        </button>
+        <div class="player-settings">
 
-      </div>
-
-
-      <div class="table-wrapper">
-
-        <table id="yakumanTable">
-
-          <thead>
-
-            <tr>
-
-              <th>No.</th>
-
-              <th>半荘数</th>
-
-              <th id="yakumanName1">
-                名前1
-              </th>
-
-              <th id="yakumanName2">
-                名前2
-              </th>
-
-              <th id="yakumanName3">
-                名前3
-              </th>
-
-              <th id="yakumanName4">
-                名前4
-              </th>
-
-              <th>差分</th>
-
-              <th>役満名</th>
-
-              <th>備考</th>
-
-              <th class="operation-column">
-                操作
-              </th>
-
-            </tr>
-
-          </thead>
+          <label>
+            名前1
+            <input
+              id="playerName1"
+              type="text"
+              maxlength="30"
+              value="名前1"
+            >
+          </label>
 
 
-          <tbody id="yakumanTableBody"></tbody>
+          <label>
+            名前2
+            <input
+              id="playerName2"
+              type="text"
+              maxlength="30"
+              value="名前2"
+            >
+          </label>
 
 
-          <tfoot id="yakumanTableFooter"></tfoot>
-
-        </table>
-
-      </div>
-
-    </section>
-
-
-    <!-- ============================== -->
-    <!-- 使い方 -->
-    <!-- ============================== -->
-
-    <section class="card help">
-
-      <h2>使い方</h2>
-
-      <ol>
-
-        <li>
-          「参加者設定」で4人の名前を入力します。
-        </li>
-
-        <li>
-          「＋ 半荘を追加」から半荘を追加します。
-        </li>
-
-        <li>
-          名前ごとのスコアを入力します。
-        </li>
-
-        <li>
-          必要に応じて役満を記録します。
-        </li>
-
-        <li>
-          「JSONを書き出す」を押します。
-        </li>
-
-        <li>
-          ダウンロードされた
-          <code>score.json</code>
-          をGitHubリポジトリにアップロードしてCommitします。
-        </li>
-
-        <li>
-          参加者がページを再読み込みすると、
-          GitHubに保存された最新データが表示されます。
-        </li>
-
-      </ol>
+          <label>
+            名前3
+            <input
+              id="playerName3"
+              type="text"
+              maxlength="30"
+              value="名前3"
+            >
+          </label>
 
 
-      <p class="warning">
+          <label>
+            名前4
+            <input
+              id="playerName4"
+              type="text"
+              maxlength="30"
+              value="名前4"
+            >
+          </label>
 
-        ※ ブラウザ上で入力しただけでは
-        GitHubのデータは更新されません。
-        「JSONを書き出す」で作成した
-        score.jsonをGitHubへCommitしてください。
+        </div>
 
+      </section>
+
+
+      <!-- ===================================================
+           スコア表
+           =================================================== -->
+
+      <section class="card">
+
+        <div class="section-header">
+
+          <div>
+
+            <h2>
+              スコア表
+            </h2>
+
+            <p class="description">
+              各半荘の名前1～4の合計が差分になります。
+              トップは赤、最下位は青で表示されます。
+            </p>
+
+          </div>
+
+
+          <button
+            id="addScoreButton"
+            class="button primary"
+            type="button"
+          >
+            ＋ 半荘を追加
+          </button>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+          <table id="scoreTable">
+
+            <thead>
+
+              <tr>
+
+                <th>
+                  半荘数
+                </th>
+
+                <th id="scoreName1">
+                  名前1
+                </th>
+
+                <th id="scoreName2">
+                  名前2
+                </th>
+
+                <th id="scoreName3">
+                  名前3
+                </th>
+
+                <th id="scoreName4">
+                  名前4
+                </th>
+
+                <th>
+                  差分
+                </th>
+
+                <th>
+                  備考
+                </th>
+
+                <th class="operation-column">
+                  操作
+                </th>
+
+              </tr>
+
+            </thead>
+
+
+            <tbody id="scoreTableBody">
+            </tbody>
+
+
+            <tfoot id="scoreTableFooter">
+            </tfoot>
+
+          </table>
+
+        </div>
+
+      </section>
+
+
+      <!-- ===================================================
+           役満表
+           =================================================== -->
+
+      <section class="card">
+
+        <div class="section-header">
+
+          <div>
+
+            <h2>
+              役満表
+            </h2>
+
+            <p class="description">
+              役満が発生した半荘数と各プレイヤーの点数を記録します。
+            </p>
+
+          </div>
+
+
+          <button
+            id="addYakumanButton"
+            class="button primary"
+            type="button"
+          >
+            ＋ 役満を追加
+          </button>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+          <table id="yakumanTable">
+
+            <thead>
+
+              <tr>
+
+                <th>
+                  No.
+                </th>
+
+                <th>
+                  半荘数
+                </th>
+
+                <th id="yakumanName1">
+                  名前1
+                </th>
+
+                <th id="yakumanName2">
+                  名前2
+                </th>
+
+                <th id="yakumanName3">
+                  名前3
+                </th>
+
+                <th id="yakumanName4">
+                  名前4
+                </th>
+
+                <th>
+                  差分
+                </th>
+
+                <th>
+                  役満名
+                </th>
+
+                <th>
+                  備考
+                </th>
+
+                <th class="operation-column">
+                  操作
+                </th>
+
+              </tr>
+
+            </thead>
+
+
+            <tbody id="yakumanTableBody">
+            </tbody>
+
+
+            <tfoot id="yakumanTableFooter">
+            </tfoot>
+
+          </table>
+
+        </div>
+
+      </section>
+
+
+      <!-- ===================================================
+           操作説明
+           =================================================== -->
+
+      <section class="card help">
+
+        <h2>
+          データについて
+        </h2>
+
+
+        <ol>
+
+          <li>
+            入力内容は入力するたびに、この端末のブラウザへ自動保存されます。
+          </li>
+
+          <li>
+            ブラウザを閉じても、同じ端末・同じブラウザなら入力内容を復元できます。
+          </li>
+
+          <li>
+            JSON出力を押すと、現在のデータを
+            <code>score.json</code>
+            としてダウンロードできます。
+          </li>
+
+          <li>
+            ダウンロードした
+            <code>score.json</code>
+            をGitHubへCommitすると、他の端末にも共有されます。
+          </li>
+
+          <li>
+            PDF出力では、印刷用の成績表レイアウトが表示されます。
+            ブラウザの印刷画面で「PDFとして保存」を選択してください。
+          </li>
+
+        </ol>
+
+
+        <p class="warning">
+          「GitHubから再読み込み」を実行すると、この端末で未共有の編集内容は破棄され、
+          GitHub上のscore.jsonが読み込まれます。
+        </p>
+
+      </section>
+
+    </main>
+
+
+    <footer class="page-footer">
+
+      GitHub Pages 麻雀スコア表
+
+    </footer>
+
+  </div>
+
+
+  <!-- =====================================================
+       PDF・印刷専用画面
+       ===================================================== -->
+
+  <div
+    id="printArea"
+    aria-hidden="true"
+  >
+
+    <div class="print-header">
+
+      <h1>
+        麻雀 成績表
+      </h1>
+
+      <p>
+        出力日時：
+        <span id="printDate"></span>
       </p>
 
+    </div>
+
+
+    <section class="print-players">
+
+      <h2>
+        参加者
+      </h2>
+
+      <div
+        id="printPlayers"
+        class="print-player-list"
+      >
+      </div>
+
     </section>
 
-  </main>
+
+    <section>
+
+      <h2>
+        スコア表
+      </h2>
 
 
-  <!-- ============================== -->
-  <!-- フッター -->
-  <!-- ============================== -->
+      <table
+        id="printScoreTable"
+        class="print-table"
+      >
+      </table>
 
-  <footer class="page-footer">
+    </section>
 
-    <p>
-      Mahjong Score
-    </p>
 
-  </footer>
+    <section class="print-yakuman-section">
+
+      <h2>
+        役満表
+      </h2>
+
+
+      <table
+        id="printYakumanTable"
+        class="print-table"
+      >
+      </table>
+
+    </section>
+
+
+    <div class="print-footer">
+
+      麻雀スコア表
+
+    </div>
+
+  </div>
 
 
   <script src="app.js"></script>
 
 </body>
+
 </html>
