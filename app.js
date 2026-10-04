@@ -35,6 +35,20 @@ let appData = {
 };
 
 
+/*
+ * 現在のデータの出所
+ *
+ * github
+ *   GitHubから読み込んだデータ
+ *
+ * local
+ *   携帯・PCのlocalStorageや
+ *   JSONファイルから読み込んだデータ
+ */
+
+let dataSource = "github";
+
+
 /* =========================================================
  * DOM
  * ========================================================= */
@@ -81,6 +95,18 @@ const addYakumanButton =
   );
 
 
+const importButton =
+  document.getElementById(
+    "importButton"
+  );
+
+
+const jsonFileInput =
+  document.getElementById(
+    "jsonFileInput"
+  );
+
+
 const exportButton =
   document.getElementById(
     "exportButton"
@@ -120,11 +146,8 @@ document.addEventListener(
 /* =========================================================
  * 初期データ読み込み
  *
- * localStorageに保存されたデータがある場合、
+ * localStorageが存在する場合は、
  * それを優先する。
- *
- * これにより、携帯で入力途中のデータを
- * ブラウザ再起動後にも復元できる。
  * ========================================================= */
 
 async function loadInitialData() {
@@ -137,12 +160,19 @@ async function loadInitialData() {
 
     appData =
       normalizeData(
-        localData
+        localData.data
       );
 
 
+    dataSource =
+      localData.source ||
+      "local";
+
+
     setStatus(
-      "この端末に保存されていたデータを復元しました。"
+      buildLocalStatus(
+        localData.source
+      )
     );
 
 
@@ -151,7 +181,31 @@ async function loadInitialData() {
   }
 
 
+  await loadFromGitHub(
+    false
+  );
+
+}
+
+
+/* =========================================================
+ * GitHubから読み込む
+ * ========================================================= */
+
+async function loadFromGitHub(
+  showMessage = true
+) {
+
   try {
+
+    if (showMessage) {
+
+      setStatus(
+        "GitHubからデータを読み込んでいます..."
+      );
+
+    }
+
 
     const response =
       await fetch(
@@ -181,32 +235,48 @@ async function loadInitialData() {
       );
 
 
-    saveLocalData();
+    dataSource =
+      "github";
 
 
-    setStatus(
-      "GitHubのscore.jsonを読み込みました。"
+    saveLocalData(
+      "github"
     );
 
+
+    if (showMessage) {
+
+      setStatus(
+        `GitHubのデータを読み込みました。更新日時: ${
+          formatDate(
+            appData.updatedAt
+          )
+        }`
+      );
+
+    }
+
+
+    return true;
 
   } catch (error) {
 
     console.error(
-      "score.jsonの読み込みに失敗しました。",
+      "GitHubからの読み込みに失敗しました。",
       error
     );
 
 
-    appData =
-      normalizeData({});
+    if (showMessage) {
+
+      setStatus(
+        "GitHubからの読み込みに失敗しました。"
+      );
+
+    }
 
 
-    saveLocalData();
-
-
-    setStatus(
-      "新しいスコア表を開始しました。"
-    );
+    return false;
 
   }
 
@@ -426,11 +496,45 @@ function setupEvents() {
   );
 
 
+  /*
+   * JSON読込ボタン
+   */
+
+  importButton.addEventListener(
+    "click",
+    () => {
+
+      jsonFileInput.value = "";
+
+      jsonFileInput.click();
+
+    }
+  );
+
+
+  /*
+   * JSONファイル選択後
+   */
+
+  jsonFileInput.addEventListener(
+    "change",
+    handleJsonFile
+  );
+
+
+  /*
+   * JSON出力
+   */
+
   exportButton.addEventListener(
     "click",
     exportJson
   );
 
+
+  /*
+   * PDF出力
+   */
 
   pdfButton.addEventListener(
     "click",
@@ -438,11 +542,19 @@ function setupEvents() {
   );
 
 
+  /*
+   * GitHubから再読み込み
+   */
+
   reloadButton.addEventListener(
     "click",
     reloadFromGitHub
   );
 
+
+  /*
+   * 名前変更
+   */
 
   for (
     let i = 0;
@@ -478,17 +590,207 @@ function setupEvents() {
           value;
 
 
+        dataSource =
+          "local";
+
+
         renderPlayerNames();
 
-        saveLocalData();
+        saveLocalData(
+          "local"
+        );
 
 
         setStatus(
-          "参加者名を端末に保存しました。"
+          "ローカル編集中：参加者名を保存しました。"
         );
 
       }
     );
+
+  }
+
+}
+
+
+/* =========================================================
+ * JSONファイル読み込み
+ *
+ * GitHubには何も送信しない。
+ *
+ * JSON
+ *   ↓
+ * normalize
+ *   ↓
+ * localStorage
+ *   ↓
+ * 画面
+ * ========================================================= */
+
+async function handleJsonFile(
+  event
+) {
+
+  const file =
+    event.target.files?.[0];
+
+
+  if (!file) {
+
+    return;
+
+  }
+
+
+  /*
+   * JSON以外を拒否
+   */
+
+  if (
+    !file.name
+      .toLowerCase()
+      .endsWith(".json")
+  ) {
+
+    alert(
+      "JSONファイルを選択してください。"
+    );
+
+
+    return;
+
+  }
+
+
+  try {
+
+    const text =
+      await file.text();
+
+
+    const importedData =
+      JSON.parse(
+        text
+      );
+
+
+    const normalized =
+      normalizeData(
+        importedData
+      );
+
+
+    /*
+     * 読み込んだデータに
+     * スコア表・役満表などが
+     * 本当に入っているか確認。
+     *
+     * 空のJSONも正しいJSONなので、
+     * 基本的には読み込み可能。
+     */
+
+
+    const scoreCount =
+      normalized.scores.length;
+
+
+    const yakumanCount =
+      normalized.yakuman.length;
+
+
+    const playerText =
+      normalized.players.join(
+        " / "
+      );
+
+
+    const confirmed =
+      confirm(
+
+        "選択したJSONを読み込みます。\n\n" +
+
+        `参加者：${playerText}\n` +
+
+        `半荘数：${scoreCount}\n` +
+
+        `役満数：${yakumanCount}\n\n` +
+
+        "現在の携帯内データは上書きされます。\n" +
+
+        "GitHubには何も反映されません。\n\n" +
+
+        "読み込みますか？"
+
+      );
+
+
+    if (!confirmed) {
+
+      setStatus(
+        "JSON読込をキャンセルしました。"
+      );
+
+
+      return;
+
+    }
+
+
+    /*
+     * JSONの内容をアプリへ反映
+     */
+
+    appData =
+      normalized;
+
+
+    dataSource =
+      "local";
+
+
+    /*
+     * localStorageへ保存
+     */
+
+    saveLocalData(
+      "local"
+    );
+
+
+    /*
+     * 画面へ反映
+     */
+
+    render();
+
+
+    setStatus(
+      `ローカルJSONを読み込みました。` +
+      `（半荘${scoreCount}件 / 役満${yakumanCount}件）`
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "JSON読み込みエラー",
+      error
+    );
+
+
+    alert(
+      "JSONファイルを読み込めませんでした。\n\n" +
+      "正しいscore.jsonを選択してください。"
+    );
+
+
+  } finally {
+
+    /*
+     * 同じファイルをもう一度選択できるようにする。
+     */
+
+    jsonFileInput.value = "";
 
   }
 
@@ -597,13 +899,20 @@ function addScore() {
   });
 
 
-  saveLocalData();
+  dataSource =
+    "local";
+
+
+  saveLocalData(
+    "local"
+  );
+
 
   render();
 
 
   setStatus(
-    "半荘を追加しました。"
+    "ローカル編集中：半荘を追加しました。"
   );
 
 }
@@ -637,13 +946,20 @@ function addYakuman() {
   });
 
 
-  saveLocalData();
+  dataSource =
+    "local";
+
+
+  saveLocalData(
+    "local"
+  );
+
 
   render();
 
 
   setStatus(
-    "役満を追加しました。"
+    "ローカル編集中：役満を追加しました。"
   );
 
 }
@@ -1183,10 +1499,6 @@ function applyRankingColors(
   );
 
 
-  /*
-   * 全員未入力なら彩色しない
-   */
-
   const hasInput =
     values.some(
       value =>
@@ -1212,11 +1524,6 @@ function applyRankingColors(
       ...values
     );
 
-
-  /*
-   * 全員同点の場合は、
-   * トップ・最下位の色を付けない。
-   */
 
   if (
     max === min
@@ -1550,12 +1857,16 @@ document.addEventListener(
 
 
     /*
-     * ここが重要。
-     *
-     * 入力するたびにlocalStorageへ保存する。
+     * 入力のたびにlocalStorageへ保存。
      */
 
-    saveLocalData();
+    dataSource =
+      "local";
+
+
+    saveLocalData(
+      "local"
+    );
 
 
     if (
@@ -1580,7 +1891,7 @@ document.addEventListener(
 
 
     setStatus(
-      "入力内容をこの端末に保存しました。"
+      "ローカル編集中：入力内容を保存しました。"
     );
 
   }
@@ -1675,13 +1986,20 @@ document.addEventListener(
     }
 
 
-    saveLocalData();
+    dataSource =
+      "local";
+
+
+    saveLocalData(
+      "local"
+    );
+
 
     render();
 
 
     setStatus(
-      "削除内容をこの端末に保存しました。"
+      "ローカル編集中：削除内容を保存しました。"
     );
 
   }
@@ -1707,16 +2025,33 @@ function render() {
 
 /* =========================================================
  * localStorage保存
+ *
+ * sourceも一緒に保存する。
  * ========================================================= */
 
-function saveLocalData() {
+function saveLocalData(
+  source = dataSource
+) {
 
   try {
+
+    const storageData = {
+
+      source,
+
+      savedAt:
+        new Date().toISOString(),
+
+      data:
+        appData
+
+    };
+
 
     localStorage.setItem(
       LOCAL_STORAGE_KEY,
       JSON.stringify(
-        appData
+        storageData
       )
     );
 
@@ -1758,9 +2093,63 @@ function loadLocalData() {
     }
 
 
-    return JSON.parse(
-      text
-    );
+    const parsed =
+      JSON.parse(
+        text
+      );
+
+
+    /*
+     * 新形式
+     */
+
+    if (
+      parsed &&
+      parsed.data
+    ) {
+
+      return {
+
+        source:
+          parsed.source ||
+          "local",
+
+        data:
+          parsed.data
+
+      };
+
+    }
+
+
+    /*
+     * 旧形式との互換性。
+     *
+     * 以前のバージョンで保存された
+     * appDataそのものが入っていた場合。
+     */
+
+    if (
+      parsed &&
+      (
+        parsed.players ||
+        parsed.scores ||
+        parsed.yakuman
+      )
+    ) {
+
+      return {
+
+        source: "local",
+
+        data: parsed
+
+      };
+
+    }
+
+
+    return null;
 
   } catch (error) {
 
@@ -1779,6 +2168,8 @@ function loadLocalData() {
 
 /* =========================================================
  * JSON出力
+ *
+ * GitHubには何も送信しない。
  * ========================================================= */
 
 function exportJson() {
@@ -1855,19 +2246,29 @@ function exportJson() {
 
 
   /*
-   * JSON出力したデータも、
-   * 最新状態として端末に保存する。
+   * 出力した時点の更新日時を
+   * アプリ側にも反映。
    */
 
   appData.updatedAt =
     exportData.updatedAt;
 
 
-  saveLocalData();
+  /*
+   * JSON出力後もローカル編集中として扱う。
+   */
+
+  dataSource =
+    "local";
+
+
+  saveLocalData(
+    "local"
+  );
 
 
   setStatus(
-    "score.jsonを出力しました。GitHubへCommitしてください。"
+    "score.jsonを出力しました。GitHubにはまだ反映されていません。"
   );
 
 }
@@ -1875,11 +2276,6 @@ function exportJson() {
 
 /* =========================================================
  * PDF出力
- *
- * ブラウザ標準の印刷機能を利用。
- *
- * 「PDF出力」→ 印刷画面 →
- * 「PDFとして保存」
  * ========================================================= */
 
 function exportPdf() {
@@ -1892,14 +2288,11 @@ function exportPdf() {
   );
 
 
-  /*
-   * DOMの描画を待ってから印刷する。
-   */
-
   setTimeout(
     () => {
 
       window.print();
+
 
       setStatus(
         "印刷画面を表示しました。PDFとして保存できます。"
@@ -1948,10 +2341,6 @@ function buildPrintArea() {
     );
 
 
-  /*
-   * 参加者
-   */
-
   printPlayers.innerHTML =
     appData.players
       .map(
@@ -1964,17 +2353,9 @@ function buildPrintArea() {
       .join("");
 
 
-  /*
-   * スコア表
-   */
-
   printScoreTable.innerHTML =
     buildPrintScoreTable();
 
-
-  /*
-   * 役満表
-   */
 
   printYakumanTable.innerHTML =
     buildPrintYakumanTable();
@@ -2329,7 +2710,7 @@ function buildPrintYakumanTable() {
 
 
 /* =========================================================
- * PDF用ランキングクラス
+ * PDF用ランキング
  * ========================================================= */
 
 function getRankingClasses(
@@ -2369,10 +2750,6 @@ function getRankingClasses(
       ...values
     );
 
-
-  /*
-   * 全員同点なら色を付けない。
-   */
 
   if (
     max === min
@@ -2451,92 +2828,74 @@ function printDiffClass(
 
 async function reloadFromGitHub() {
 
-  if (
+  const confirmed =
+    confirm(
 
-    !confirm(
       "GitHub上のscore.jsonを読み込みます。\n\n" +
-      "この端末で現在編集中のデータは破棄されます。\n\n" +
-      "続行しますか？"
-    )
 
-  ) {
+      "この端末で現在編集中のローカルデータは破棄されます。\n\n" +
+
+      "GitHub版に戻しますか？"
+
+    );
+
+
+  if (!confirmed) {
 
     return;
 
   }
 
 
-  setStatus(
-    "GitHubからデータを読み込んでいます..."
-  );
+  const success =
+    await loadFromGitHub(
+      true
+    );
 
 
-  try {
-
-    const response =
-      await fetch(
-        `${DATA_FILE}?t=${Date.now()}`,
-        {
-          cache: "no-store"
-        }
-      );
-
-
-    if (!response.ok) {
-
-      throw new Error(
-        `HTTP ${response.status}`
-      );
-
-    }
-
-
-    const data =
-      await response.json();
-
-
-    appData =
-      normalizeData(
-        data
-      );
-
-
-    /*
-     * GitHub版をlocalStorageへ保存し直す。
-     */
-
-    saveLocalData();
-
+  if (success) {
 
     render();
 
+  }
 
-    setStatus(
-      `GitHubのデータを読み込みました。更新日時: ${
-        formatDate(
-          appData.updatedAt
-        )
-      }`
-    );
+}
 
 
-  } catch (error) {
+/* =========================================================
+ * ローカル状態表示
+ * ========================================================= */
 
-    console.error(
-      error
-    );
+function buildLocalStatus(
+  source
+) {
 
+  if (
+    source === "github"
+  ) {
 
-    setStatus(
-      "GitHubからの読み込みに失敗しました。"
-    );
+    return (
 
+      "GitHub版を端末に保存しています。" +
 
-    alert(
-      "score.jsonを読み込めませんでした。"
+      ` 更新日時: ${formatDate(
+        appData.updatedAt
+      )}`
+
     );
 
   }
+
+
+  return (
+
+    "ローカル編集中：この端末のデータを表示しています。" +
+
+    ` 更新日時: ${formatDate(
+      appData.updatedAt
+    )}`
+
+  );
 
 }
 
