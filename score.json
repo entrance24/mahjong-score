@@ -1,6 +1,12 @@
 {
   "version": 1,
   "updatedAt": "",
+  "players": [
+    "名前1",
+    "名前2",
+    "名前3",
+    "名前4"
+  ],
   "scores": [],
   "yakuman": []
 }
