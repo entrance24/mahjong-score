@@ -500,18 +500,6 @@ function setupEvents() {
    * JSON読込ボタン
    */
 
-  importButton.addEventListener(
-    "click",
-    () => {
-
-      jsonFileInput.value = "";
-
-      jsonFileInput.click();
-
-    }
-  );
-
-
   /*
    * JSONファイル選択後
    */
