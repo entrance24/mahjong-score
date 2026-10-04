@@ -1,1 +1,22 @@
-
+{
+  "rules": [
+    {
+      "id": "rule1",
+      "name": "ルール1",
+      "description": "ぶっトビウオ基本ルール",
+      "yakumanSet": "standard"
+    },
+    {
+      "id": "rule2",
+      "name": "ルール2",
+      "description": "特殊ルール2",
+      "yakumanSet": "rule2"
+    },
+    {
+      "id": "rule3",
+      "name": "ルール3",
+      "description": "特殊ルール3",
+      "yakumanSet": "rule3"
+    }
+  ]
+}
