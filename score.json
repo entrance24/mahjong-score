@@ -1,12 +1,248 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-10T01:01:46.670Z",
+  "updatedAt": "2026-10-10T10:19:44.213Z",
   "players": [
     "小松",
     "山田",
     "大西",
     "名前4"
   ],
-  "scores": [],
-  "yakuman": []
+  "scores": [
+    {
+      "han": 1,
+      "name1": 130,
+      "name2": -96,
+      "name3": -34,
+      "name4": null,
+      "note": ""
+    },
+    {
+      "han": 2,
+      "name1": 94,
+      "name2": -69,
+      "name3": -25,
+      "name4": null,
+      "note": ""
+    },
+    {
+      "han": 3,
+      "name1": 40,
+      "name2": -51,
+      "name3": 11,
+      "name4": null,
+      "note": ""
+    },
+    {
+      "han": 4,
+      "name1": 79,
+      "name2": 28,
+      "name3": -107,
+      "name4": null,
+      "note": ""
+    },
+    {
+      "han": 5,
+      "name1": -38,
+      "name2": 6,
+      "name3": 32,
+      "name4": null,
+      "note": ""
+    },
+    {
+      "han": 6,
+      "name1": -94,
+      "name2": -116,
+      "name3": 210,
+      "name4": null,
+      "note": ""
+    },
+    {
+      "han": 7,
+      "name1": -92,
+      "name2": 57,
+      "name3": 35,
+      "name4": null,
+      "note": ""
+    },
+    {
+      "han": 8,
+      "name1": 91,
+      "name2": -54,
+      "name3": -37,
+      "name4": null,
+      "note": ""
+    },
+    {
+      "han": 9,
+      "name1": 16,
+      "name2": 47,
+      "name3": -63,
+      "name4": null,
+      "note": ""
+    },
+    {
+      "han": 10,
+      "name1": 61,
+      "name2": -61,
+      "name3": 0,
+      "name4": null,
+      "note": ""
+    },
+    {
+      "han": 11,
+      "name1": 113,
+      "name2": -139,
+      "name3": 26,
+      "name4": null,
+      "note": ""
+    },
+    {
+      "han": 12,
+      "name1": 56,
+      "name2": 40,
+      "name3": -96,
+      "name4": null,
+      "note": ""
+    },
+    {
+      "han": 13,
+      "name1": 139,
+      "name2": -105,
+      "name3": -34,
+      "name4": null,
+      "note": ""
+    },
+    {
+      "han": 14,
+      "name1": -13,
+      "name2": 54,
+      "name3": -41,
+      "name4": null,
+      "note": ""
+    },
+    {
+      "han": 15,
+      "name1": 42,
+      "name2": -118,
+      "name3": 76,
+      "name4": null,
+      "note": ""
+    },
+    {
+      "han": 16,
+      "name1": 91,
+      "name2": -104,
+      "name3": 13,
+      "name4": null,
+      "note": ""
+    },
+    {
+      "han": 17,
+      "name1": -102,
+      "name2": 79,
+      "name3": 23,
+      "name4": null,
+      "note": ""
+    },
+    {
+      "han": 18,
+      "name1": -137,
+      "name2": 100,
+      "name3": 37,
+      "name4": null,
+      "note": ""
+    },
+    {
+      "han": 19,
+      "name1": 109,
+      "name2": 2,
+      "name3": -111,
+      "name4": null,
+      "note": ""
+    },
+    {
+      "han": 20,
+      "name1": 66,
+      "name2": 12,
+      "name3": -78,
+      "name4": null,
+      "note": ""
+    },
+    {
+      "han": 21,
+      "name1": -20,
+      "name2": -107,
+      "name3": 127,
+      "name4": null,
+      "note": ""
+    },
+    {
+      "han": 22,
+      "name1": 26,
+      "name2": 86,
+      "name3": -112,
+      "name4": null,
+      "note": ""
+    },
+    {
+      "han": 23,
+      "name1": -123,
+      "name2": 14,
+      "name3": 109,
+      "name4": null,
+      "note": ""
+    }
+  ],
+  "yakuman": [
+    {
+      "no": 1,
+      "han": 1,
+      "name1": 2000,
+      "name2": -1000,
+      "name3": -1000,
+      "name4": null,
+      "yakumanName": "純正天和",
+      "note": ""
+    },
+    {
+      "no": 2,
+      "han": 5,
+      "name1": -1000,
+      "name2": 1000,
+      "name3": null,
+      "name4": null,
+      "yakumanName": "人和",
+      "note": ""
+    },
+    {
+      "no": 3,
+      "han": 5,
+      "name1": -500,
+      "name2": -500,
+      "name3": 1000,
+      "name4": null,
+      "yakumanName": "緑一色",
+      "note": ""
+    },
+    {
+      "no": 4,
+      "han": 6,
+      "name1": -500,
+      "name2": -500,
+      "name3": 1000,
+      "name4": null,
+      "yakumanName": "30役",
+      "note": ""
+    },
+    {
+      "no": 5,
+      "han": 7,
+      "name1": -1000,
+      "name2": 1000,
+      "name3": null,
+      "name4": null,
+      "yakumanName": "",
+      "note": ""
+    }
+  ]
 }
