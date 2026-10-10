@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-10T10:19:44.213Z",
+  "updatedAt": "2026-10-10T10:51:52.194Z",
   "players": [
     "小松",
     "山田",
@@ -189,6 +189,22 @@
       "name1": -123,
       "name2": 14,
       "name3": 109,
+      "name4": null,
+      "note": ""
+    },
+    {
+      "han": 24,
+      "name1": 78,
+      "name2": -18,
+      "name3": -60,
+      "name4": null,
+      "note": ""
+    },
+    {
+      "han": 25,
+      "name1": 85,
+      "name2": 39,
+      "name3": -124,
       "name4": null,
       "note": ""
     }
