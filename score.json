@@ -1,12 +1,29 @@
 {
   "version": 1,
-  "updatedAt": "",
+  "updatedAt": "2026-10-10T00:59:40.673Z",
   "players": [
     "名前1",
     "名前2",
     "名前3",
     "名前4"
   ],
-  "scores": [],
+  "scores": [
+    {
+      "han": 1,
+      "name1": 1,
+      "name2": 2,
+      "name3": -3,
+      "name4": null,
+      "note": ""
+    },
+    {
+      "han": 2,
+      "name1": 2,
+      "name2": 4,
+      "name3": -6,
+      "name4": null,
+      "note": ""
+    }
+  ],
   "yakuman": []
 }
