@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-01T05:56:27.583Z",
+  "updatedAt": "2026-11-01T05:59:53.635Z",
   "players": [
     "井手之上",
     "山本",
@@ -55,7 +55,26 @@
       "name3": -9,
       "name4": null,
       "note": ""
+    },
+    {
+      "han": 7,
+      "name1": 1,
+      "name2": -38,
+      "name3": 37,
+      "name4": null,
+      "note": "チップ"
     }
   ],
-  "yakuman": []
+  "yakuman": [
+    {
+      "no": 1,
+      "han": null,
+      "name1": null,
+      "name2": null,
+      "name3": null,
+      "name4": null,
+      "yakumanName": "",
+      "note": ""
+    }
+  ]
 }
