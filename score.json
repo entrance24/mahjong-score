@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-01T03:34:02.704Z",
+  "updatedAt": "2026-11-01T05:56:27.583Z",
   "players": [
     "井手之上",
     "山本",
@@ -21,6 +21,38 @@
       "name1": 49,
       "name2": -5,
       "name3": -44,
+      "name4": null,
+      "note": ""
+    },
+    {
+      "han": 3,
+      "name1": -12,
+      "name2": 18,
+      "name3": -6,
+      "name4": null,
+      "note": ""
+    },
+    {
+      "han": 4,
+      "name1": -11,
+      "name2": -52,
+      "name3": 63,
+      "name4": null,
+      "note": ""
+    },
+    {
+      "han": 5,
+      "name1": -45,
+      "name2": 12,
+      "name3": 33,
+      "name4": null,
+      "note": ""
+    },
+    {
+      "han": 6,
+      "name1": -30,
+      "name2": 39,
+      "name3": -9,
       "name4": null,
       "note": ""
     }
