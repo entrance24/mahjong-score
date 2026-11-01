@@ -1,96 +1,12 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-01T07:04:03.494Z",
+  "updatedAt": "2026-11-01T14:00:03.607Z",
   "players": [
-    "井手之上",
-    "山本",
-    "大西",
+    "名前1",
+    "名前2",
+    "名前3",
     "名前4"
   ],
-  "scores": [
-    {
-      "han": 1,
-      "name1": 61,
-      "name2": -50,
-      "name3": -11,
-      "name4": null,
-      "note": ""
-    },
-    {
-      "han": 2,
-      "name1": 49,
-      "name2": -5,
-      "name3": -44,
-      "name4": null,
-      "note": ""
-    },
-    {
-      "han": 3,
-      "name1": -12,
-      "name2": 18,
-      "name3": -6,
-      "name4": null,
-      "note": ""
-    },
-    {
-      "han": 4,
-      "name1": -11,
-      "name2": -52,
-      "name3": 63,
-      "name4": null,
-      "note": ""
-    },
-    {
-      "han": 5,
-      "name1": -45,
-      "name2": 12,
-      "name3": 33,
-      "name4": null,
-      "note": ""
-    },
-    {
-      "han": 6,
-      "name1": -30,
-      "name2": 39,
-      "name3": -9,
-      "name4": null,
-      "note": ""
-    },
-    {
-      "han": 7,
-      "name1": 1,
-      "name2": -38,
-      "name3": 37,
-      "name4": null,
-      "note": "チップ"
-    },
-    {
-      "han": 8,
-      "name1": 94,
-      "name2": -84,
-      "name3": -10,
-      "name4": null,
-      "note": "100変更"
-    },
-    {
-      "han": 9,
-      "name1": -58,
-      "name2": -12,
-      "name3": 70,
-      "name4": null,
-      "note": ""
-    }
-  ],
-  "yakuman": [
-    {
-      "no": 1,
-      "han": null,
-      "name1": null,
-      "name2": null,
-      "name3": null,
-      "name4": null,
-      "yakumanName": "",
-      "note": ""
-    }
-  ]
+  "scores": [],
+  "yakuman": []
 }
