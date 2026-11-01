@@ -1,12 +1,29 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-31T00:17:50.515Z",
+  "updatedAt": "2026-11-01T03:34:02.704Z",
   "players": [
-    "名前1",
-    "名前2",
-    "名前3",
+    "井手之上",
+    "山本",
+    "大西",
     "名前4"
   ],
-  "scores": [],
+  "scores": [
+    {
+      "han": 1,
+      "name1": 61,
+      "name2": -50,
+      "name3": -11,
+      "name4": null,
+      "note": ""
+    },
+    {
+      "han": 2,
+      "name1": 49,
+      "name2": -5,
+      "name3": -44,
+      "name4": null,
+      "note": ""
+    }
+  ],
   "yakuman": []
 }
